@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+<head>
+    <meta charset="utf-8">
+    <title>{{.pageTitle}}{{.siteName}} v{{.version}}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel='icon' href='/static/img/easyicon.ico' type='image/x-ico'/>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="/static/css/font-awesome.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+	<script src="/static/js/jquery-1.7.2.min.js"></script>
+	<script src="/static/js/bootstrap.js"></script>
+    <script src="/static/js/full-calendar/fullcalendar.min.js"></script>
+    <script src="/static/js/jquery.serializejson.js"></script>
+	<script src="/static/js/base.js"></script>
+    <script src="/static/js/json-format/jsonFormater.js" type="text/javascript"></script>
+    <link href="/static/js/json-format/jsonFormater.css" type="text/css" rel="stylesheet"/>
+	<link href="/static/css/pages/dashboard.css" rel="stylesheet">
+    <link href="/static/css/common.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="alert  hidden" role="alert"></div>
+{{/*<div class="navbar navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container">
+			<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</a>
+			<a class="brand" href="/">
+				<span class="icon-time"></span> {{.siteName}}				
+			</a>
+            <div class="nav-collapse">
+				<ul class="nav pull-right">
+					<li class="dropdown">						
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+							<i class="icon-user"></i> 
+							{{.loginUserName}}
+							<b class="caret"></b>
+						</a>
+						
+						<ul class="dropdown-menu">
+							<li><a href="/profile">修改资料</a></li>
+							<li><a href="/logout">退出登录</a></li>
+						</ul>						
+					</li>
+				</ul>				
+			</div>
+		</div>
+	</div>
+</div>*/}}
+    
+<div class="subnavbar">
+	<div class="subnavbar-inner">
+		<div class="container">
+			<ul class="mainnav">
+				<li {{if eq .curController "default"}}class="active"{{end}}>
+					<a href="/open/index">
+						<i class="icon-dashboard"></i>
+						<span>系统概况</span>
+					</a>	    				
+				</li>
+                <li {{if eq .curController "bizlog"}}class="active"{{end}}>
+                    <a href="/open/bizLog/list">
+                        <i class="icon-folder-close"></i>
+                        <span>日志管理</span>
+                    </a>
+                </li>
+                <li {{if eq .curController "monitor"}} class="active"{{end}}>
+                    <a href="/open/monitor/view">
+                        <i class="icon-twitter"></i>
+                        <span>监控日志</span>
+                    </a>
+                </li>
+                <li {{if eq .curController "content"}} class="active"{{end}}>
+                    <a href="/open/content/view">
+                        <i class="icon-magic"></i>
+                        <span>文件内容</span>
+                    </a>
+                </li>
+                <li {{if eq .curController "logfile"}} class="active"{{end}}>
+                    <a href="/open/logFile/view">
+                        <i class="icon-camera"></i>
+                        <span>日志文件</span>
+                    </a>
+                </li>
+                <li {{if eq .curController "manager"}} class="active"{{end}}>
+                    <a href="/open/manager/list">
+                        <i class="icon-search"></i>
+                        <span>日志查询</span>
+                    </a>
+                </li>
+                <li {{if eq .curController "field"}}class="active"{{end}}>
+                    <a href="/open/field/edit">
+                        <i class="icon-building"></i>
+                        <span>字段配置</span>
+                    </a>
+                </li>
+                <li {{if eq .curController "database"}}class="active"{{end}}>
+                    <a href="/open/dataBase/list">
+                        <i class="icon-list-alt"></i>
+                        <span>数据库配置</span>
+                    </a>
+                </li>
+                <li {{if eq .curController "remote"}} {{if  eq .curAction "edit"}} class="active" {{end}} {{end}}>
+                    <a href="/open/remote/edit">
+                        <i class="icon-heart"></i>
+                        <span>接口调用</span>
+                    </a>
+                </li>
+                <li {{if eq .curController "remote" }} {{if  eq .curAction "list"}} class="active" {{end}} {{end}}>
+                    <a href="/open/remote/list">
+                        <i class="icon-shopping-cart"></i>
+                        <span>接口调用历史</span>
+                    </a>
+                </li>
+
+
+                <li {{if eq .curController "config"}}class="active"{{end}}>
+                    <a href="/open/config/view">
+                        <i class="icon-cog"></i>
+                        <span>文件配置</span>
+					</a>
+                </li>
+				<li {{if eq .curController "help"}}class="active"{{end}}>					
+					<a href="/open/help">
+						<i class="icon-question-sign"></i>
+						<span>使用帮助</span>
+					</a>  									
+				</li>
+            {{/* <li class="dropdown" style="float: right;padding-top: 10px;">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="icon-user"></i>
+                            {{.loginUserName}}
+                                <b class="caret"></b>
+                            </a>
+
+                            <ul class="dropdown-menu">
+                                <li><a href="/profile">修改资料</a></li>
+                                <li><a href="/logout">退出登录</a></li>
+                            </ul>
+                        </li>*/}}
+            </ul>
+            <div class="nav-collapse" style="float: right">
+                <ul class="nav pull-right">
+                    <li class="dropdown" style="float: right;padding-top: 10px;">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="icon-user"></i>
+                        {{.loginUserName}}
+                            <b class="caret"></b>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li><a href="/open/index/profile">修改资料</a></li>
+                            <li><a href="/open/index/logout">退出登录</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+		</div> <!-- /container -->
+	</div> <!-- /subnavbar-inner -->
+</div> <!-- /subnavbar -->
+
+<div class="main">
+	<div class="main-inner">
+
+	    <div class="container">
+	      	
+			{{.LayoutContent}}
+	      	
+          
+		</div> <!-- /container -->
+	</div> <!-- /extra-inner -->
+</div> <!-- /extra -->
+    
+<div class="footer">
+	<div class="footer-inner">
+		<div class="container">
+			<div class="row">
+    			<div class="span7">
+    				&copy; 2018-2019 <a href="http://www.sinochem.com">sinochem.com</a>.
+    			</div>
+			<div class="span5" id="server-time" style="text-align:right">
+    				
+    			</div>
+    		</div> <!-- /row -->
+		</div> <!-- /container -->
+	</div> <!-- /footer-inner -->
+</div> <!-- /footer -->
+
+</body>
+</html>
