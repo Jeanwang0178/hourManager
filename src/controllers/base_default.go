@@ -34,9 +34,9 @@ func (this *DefaultController) GetTime() {
 // 登录
 // @router /login [get]
 func (this *DefaultController) Login() {
-	if len(this.userId) > 0 {
+	/*if len(this.userId) > 0 {
 		this.redirect("../index.html")
-	}
+	}*/
 	beego.ReadFromRequest(&this.Controller)
 	this.TplName = "default/login.html"
 }
@@ -104,7 +104,7 @@ func (this *DefaultController) Logout() {
 //@router /profile [get,post]
 func (this *DefaultController) Profile() {
 	beego.ReadFromRequest(&this.Controller)
-	user, _ := services.UserServiceUserGetById(this.userId)
+	user, _ := services.UserServiceUserGetById("")
 
 	if this.isPost() {
 		flash := beego.NewFlash()

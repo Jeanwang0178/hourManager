@@ -1,17 +1,19 @@
 package main
 
 import (
-	_ "hourManager/routers"
 	"github.com/astaxie/beego"
-	"hourManager/src/inital"
-	"net/http"
-	"html/template"
-	"github.com/beego/bee/generate/swaggergen"
 	"github.com/astaxie/beego/plugins/cors"
+	"github.com/beego/bee/generate/swaggergen"
 	beeUtils "github.com/beego/bee/utils"
+	"github.com/patrickmn/go-cache"
+	_ "hourManager/routers"
+	"hourManager/src/inital"
+	"hourManager/src/utils"
+	"html/template"
+	"net/http"
 	"os"
+	"time"
 )
-
 
 const VERSION = "1.0.1"
 
@@ -23,6 +25,7 @@ func main() {
 
 	inital.Init()
 
+	utils.Che = cache.New(60*time.Minute, 120*time.Minute)
 	//设置默认404页面
 	beego.ErrorHandler("404", func(writer http.ResponseWriter, request *http.Request) {
 		t, _ := template.New("404.html").ParseFiles(beego.BConfig.WebConfig.ViewsPath + "/error/404.html")
@@ -64,7 +67,4 @@ func main() {
 
 	beego.Run()
 
-
-
 }
-

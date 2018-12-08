@@ -15,7 +15,7 @@
     <!-- 头部 -->
     <div class="layui-header">
         <div class="layui-logo">
-            <img src="assets/images/logo.png"/>
+            <img src="/static/images/logo.png"/>
             <cite>&nbsp;EasyWeb Pro&emsp;</cite>
         </div>
         <ul class="layui-nav layui-layout-left">
@@ -38,7 +38,7 @@
             </li>
             <li class="layui-nav-item" lay-unselect>
                 <a style="display: inline;">
-                    <img src="assets/images/head.png" class="layui-nav-img">
+                    <img src="/static/images/head.png" class="layui-nav-img">
                     <cite id="huName"></cite>
                 </a>
                 <dl class="layui-nav-child">
@@ -56,7 +56,33 @@
 
 
     <!-- 内容主体区域 -->
-    {{.LayoutContent}}
+
+    <!-- 侧边栏 -->
+    <div class="layui-side">
+        <div class="layui-side-scroll">
+            <ul class="layui-nav layui-nav-tree arrow2" lay-accordion="true" lay-filter="admin-side-nav"
+                style="margin-top: 15px;">
+            {{range $index, $elem := .SideMenu1}}
+            {{if $elem}}
+                <li class="layui-nav-item">
+                    <a {{/*href="{{$elem.AuthUrl}}"*/}}><i class="layui-icon {{$elem.icon}}"></i>&emsp;<cite>{{$elem.AuthName}}</cite></a>
+                    <dl class="layui-nav-child">
+                    {{range $i, $e := $.SideMenu2}}
+                    {{if eq $e.Pid $elem.Id}}
+                        <dd>
+                            <a data-url="{{$e.AuthUrl}}" data-icon="&#xe715;" data-title="{{$e.AuthName}}" kit-target data-id="{{$e.Id}}">
+                                <i class="fa {{$e.Icon}}"></i>  &nbsp;&nbsp;<span>{{$e.AuthName}}</span>
+                            </a>
+                        </dd>
+                    {{end}}
+                    {{end}}
+                    </dl>
+                </li>
+            {{end}}
+            {{end}}
+            </ul>
+        </div>
+    </div>
 
     <!-- 主体部分 -->
     <div class="layui-body">
@@ -98,8 +124,8 @@
 
 
 <!-- js部分 -->
-<script type="text/javascript" src="./assets/libs/layui/layui.js"></script>
-<script type="text/javascript" src="./assets/js/main.js"></script>
+<script type="text/javascript" src="/static/libs/layui/layui.js"></script>
+    <script type="text/javascript" src="/static/js/main.js"></script>
 </body>
 
 </html>

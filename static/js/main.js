@@ -18,22 +18,22 @@ layui.config({
     var laytpl = layui.laytpl;
 
     // 检查是否登录
-    if (!config.getToken()) {
-        return location.replace('components/other/login.html');
-    }
+   /* if (!config.getToken()) {
+        return location.replace('login.html');
+    }*/
 
     // 获取用户信息
-    admin.req('userInfo.json', {}, function (data) {
+   /* admin.req('userInfo.json', {}, function (data) {
         if (200 == data.code) {
             config.putUser(data.user);
             $('#huName').text(data.user.nickName);
         } else {
             layer.msg('获取用户失败', {icon: 2});
         }
-    }, 'get');
+    }, 'get');*/
 
     // 加载侧边栏
-    admin.req('menus.json', {}, function (data) {
+   /* admin.req('menus.json', {}, function (data) {
         laytpl(sideNav.innerHTML).render(data, function (html) {
             $('.layui-layout-admin .layui-side .layui-nav').html(html);
             element.render('nav');
@@ -43,7 +43,7 @@ layui.config({
             url: '#/console/console1',
             name: '<i class="layui-icon layui-icon-home"></i>'
         });
-    }, 'get');
+    }, 'get');*/
 
     // 退出登录
     $('#btnLogout').click(function () {
@@ -51,7 +51,7 @@ layui.config({
             skin: 'layui-layer-admin'
         }, function () {
             config.removeToken();
-            location.replace('components/other/login.html')
+            location.replace('login/login.html')
         });
     });
 

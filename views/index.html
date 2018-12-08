@@ -101,56 +101,6 @@
     <div class="rubik-loader"></div>
 </div>
 
-<!-- 侧边栏渲染模板 -->
-<script id="sideNav" type="text/html">
-    {{#  layui.each(d, function(index, item){ }}
-    <li class="layui-nav-item">
-        <a href="{{item.url}}"><i class="layui-icon {{item.icon}}"></i>&emsp;<cite>{{ item.name}}</cite></a>
-        {{# if(item.subMenus&&item.subMenus.length>0){ }}
-        <dl class="layui-nav-child">
-            {{# layui.each(item.subMenus, function(index, subItem){ }}
-            <dd>
-                <a href="{{ subItem.url }}">{{ subItem.name }}</a>
-
-                {{# if(subItem.subMenus&&subItem.subMenus.length>0){ }}
-                <dl class="layui-nav-child">
-                    {{# layui.each(subItem.subMenus, function(index, thrItem){ }}
-                    <dd>
-                        <a href="{{ thrItem.url }}">{{ thrItem.name }}</a>
-
-                        {{# if(thrItem.subMenus&&thrItem.subMenus.length>0){ }}
-                        <dl class="layui-nav-child">
-                            {{# layui.each(thrItem.subMenus, function(index, fourItem){ }}
-                            <dd>
-                                <a href="{{ fourItem.url }}">{{ fourItem.name }}</a>
-
-                                {{# if(fourItem.subMenus&&fourItem.subMenus.length>0){ }}
-                                <dl class="layui-nav-child">
-                                    {{# layui.each(fourItem.subMenus, function(index, fiveItem){ }}
-                                    <dd>
-                                        <a href="{{ fiveItem.url }}">{{ fiveItem.name }}</a>
-                                    </dd>
-                                    {{# }); }}
-                                </dl>
-                                {{# } }}
-
-                            </dd>
-                            {{# }); }}
-                        </dl>
-                        {{# } }}
-
-                    </dd>
-                    {{# }); }}
-                </dl>
-                {{# } }}
-            </dd>
-            {{# }); }}
-        </dl>
-        {{# } }}
-    </li>
-    {{#  }); }}
-</script>
-
 <!-- js部分 -->
 <script type="text/javascript" src="../static/libs/layui/layui.js"></script>
 <script type="text/javascript" src="../static/js/main.js"></script>

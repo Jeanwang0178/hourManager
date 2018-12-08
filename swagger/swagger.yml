@@ -1,34 +1,6 @@
 swagger: "2.0"
 info: {}
-basePath: /hour
-paths:
-  /default/:
-    get:
-      tags:
-      - default
-  /default/gettime:
-    get:
-      tags:
-      - default
-  /default/login:
-    get:
-      tags:
-      - default
-  /default/logout:
-    get:
-      tags:
-      - default
-  /default/postLogin:
-    post:
-      tags:
-      - default
-  /default/profile:
-    get:
-      tags:
-      - default
-    post:
-      tags:
-      - default
+paths: {}
 definitions:
   models.ComUser:
     title: ComUser
