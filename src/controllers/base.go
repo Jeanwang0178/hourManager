@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"fmt"
 	"github.com/astaxie/beego"
+	"github.com/beego/bee/logger"
 	"github.com/patrickmn/go-cache"
 	"hourManager/src/models"
 	"hourManager/src/utils"
@@ -38,7 +38,6 @@ func (this *BaseController) Prepare() {
 	this.Data["curRoute"] = this.controllerName + "." + this.actionName
 	this.Data["curController"] = this.controllerName
 	this.Data["curAction"] = this.actionName
-	fmt.Println(this.controllerName)
 	if (strings.Compare(this.controllerName, "apidoc")) != 0 {
 		this.auth()
 	}
@@ -76,10 +75,11 @@ func (this *BaseController) auth() {
 
 			isHasAuth := strings.Contains(this.allowUrl, this.controllerName+"/"+this.actionName)
 			//不需要权限检查
-			noAuth := "ajaxsave/ajaxdel/table/loginin/loginout/getnodes/start/show/ajaxapisave/index/group/public/env/code/apidetail"
+			noAuth := "ajaxmodify/ajaxsave/ajaxdel/table/loginin/loginout/getnodes/start/show/ajaxapisave/index/group/public/env/code/apidetail"
 			isNoAuth := strings.Contains(noAuth, this.actionName)
 			if isHasAuth == false && isNoAuth == false {
-				this.Ctx.WriteString("没有权限")
+				//this.Ctx.WriteString("没有权限")
+				beeLogger.Log.Error("没有权限")
 				this.ajaxMsg("没有权限", MSG_ERR)
 				return
 			}

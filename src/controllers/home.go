@@ -17,3 +17,8 @@ func (self *HomeController) Index() {
 	self.Data["pageTitle"] = "系统首页"
 	self.TplName = "layout/main.html"
 }
+
+func (self *HomeController) Start() {
+	self.Data["pageTitle"] = "控制面板"
+	self.display()
+}

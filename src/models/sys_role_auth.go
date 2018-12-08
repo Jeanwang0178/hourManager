@@ -20,9 +20,9 @@ import (
 )
 
 type SysRoleAuth struct {
-	Id     int `orm:"column(id);auto" description:"主键ID"`
-	RoleId int `orm:"column(role_id)" description:"角色ID"`
-	AuthId int `orm:"column(auth_id)" description:"权限ID"`
+	Id     int64 `orm:"column(id);auto" description:"主键ID"`
+	RoleId int64 `orm:"column(role_id)" description:"角色ID"`
+	AuthId int64 `orm:"column(auth_id)" description:"权限ID"`
 }
 
 func (t *SysRoleAuth) TableName() string {
@@ -43,13 +43,23 @@ func AddSysRoleAuth(m *SysRoleAuth) (id int64, err error) {
 
 // GetSysRoleAuthById retrieves SysRoleAuth by Id. Returns error if
 // Id doesn't exist
-func GetSysRoleAuthById(id int) (v *SysRoleAuth, err error) {
+func GetSysRoleAuthById(id int64) (v *SysRoleAuth, err error) {
 	o := orm.NewOrm()
 	v = &SysRoleAuth{Id: id}
 	if err = o.Read(v); err == nil {
 		return v, nil
 	}
 	return nil, err
+}
+
+func GetSysRoleAuthByRoleId(roleId int64) ([]*SysRoleAuth, error) {
+	list := make([]*SysRoleAuth, 0)
+	query := orm.NewOrm().QueryTable("sys_role_auth")
+	_, err := query.Filter("role_id", roleId).All(&list, "AuthId")
+	if err != nil {
+		return nil, err
+	}
+	return list, nil
 }
 
 //获取多个
@@ -64,7 +74,7 @@ func GetSysRoleAuthByIds(RoleIds string) (Authids string, err error) {
 	b := bytes.Buffer{}
 	for _, v := range list {
 		if v.AuthId != 0 && v.AuthId != 1 {
-			b.WriteString(strconv.Itoa(v.AuthId))
+			b.WriteString(strconv.FormatInt(v.AuthId, 10))
 			b.WriteString(",")
 		}
 	}
@@ -167,7 +177,7 @@ func UpdateSysRoleAuthById(m *SysRoleAuth) (err error) {
 
 // DeleteSysRoleAuth deletes SysRoleAuth by Id and returns error if
 // the record to be deleted doesn't exist
-func DeleteSysRoleAuth(id int) (err error) {
+func DeleteSysRoleAuth(id int64) (err error) {
 	o := orm.NewOrm()
 	v := SysRoleAuth{Id: id}
 	// ascertain id exists in the database

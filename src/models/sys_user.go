@@ -28,11 +28,11 @@ type SysUser struct {
 	Salt       string `orm:"column(salt);size(10)" description:"密码盐"`
 	LastLogin  int64  `orm:"column(last_login)" description:"最后登录时间"`
 	LastIp     string `orm:"column(last_ip);size(15)" description:"最后登录IP"`
-	Status     int8   `orm:"column(status)" description:"状态，1-正常 0禁用"`
-	CreateId   uint   `orm:"column(create_id)" description:"创建者ID"`
-	UpdateId   uint   `orm:"column(update_id)" description:"修改者ID"`
-	CreateTime uint   `orm:"column(create_time)" description:"创建时间"`
-	UpdateTime uint   `orm:"column(update_time)" description:"修改时间"`
+	Status     int    `orm:"column(status)" description:"状态，1-正常 0禁用"`
+	CreateId   int64  `orm:"column(create_id)" description:"创建者ID"`
+	UpdateId   int64  `orm:"column(update_id)" description:"修改者ID"`
+	CreateTime int64  `orm:"column(create_time)" description:"创建时间"`
+	UpdateTime int64  `orm:"column(update_time)" description:"修改时间"`
 }
 
 func (t *SysUser) TableName() string {
@@ -71,6 +71,21 @@ func GetSysUserByName(loginName string) (*SysUser, error) {
 		return nil, err
 	}
 	return u, nil
+}
+
+func GetSysUserList(page, pageSize int, filters ...interface{}) ([]*SysUser, int64) {
+	offset := (page - 1) * pageSize
+	list := make([]*SysUser, 0)
+	query := orm.NewOrm().QueryTable("sys_user")
+	if len(filters) > 0 {
+		l := len(filters)
+		for k := 0; k < l; k += 2 {
+			query = query.Filter(filters[k].(string), filters[k+1])
+		}
+	}
+	total, _ := query.Count()
+	query.OrderBy("-id").Limit(pageSize, offset).All(&list)
+	return list, total
 }
 
 func (u *SysUser) UpdateSysUser(fields ...string) error {

@@ -18,19 +18,19 @@ import (
 )
 
 type SysAuth struct {
-	Id         int    `orm:"column(id);auto" description:"自增ID"`
-	Pid        uint   `orm:"column(pid)" description:"上级ID，0为顶级"`
+	Id         int64  `orm:"column(id);auto" description:"自增ID"`
+	Pid        int64  `orm:"column(pid)" description:"上级ID，0为顶级"`
 	AuthName   string `orm:"column(auth_name);size(64)" description:"权限名称"`
 	AuthUrl    string `orm:"column(auth_url);size(255)" description:"URL地址"`
-	Sort       uint   `orm:"column(sort)" description:"排序，越小越前"`
+	Sort       int    `orm:"column(sort)" description:"排序，越小越前"`
 	Icon       string `orm:"column(icon);size(255)"`
-	IsShow     uint8  `orm:"column(is_show)" description:"是否显示，0-隐藏，1-显示"`
-	UserId     uint   `orm:"column(user_id)" description:"操作者ID"`
-	CreateId   uint   `orm:"column(create_id)" description:"创建者ID"`
-	UpdateId   uint   `orm:"column(update_id)" description:"修改者ID"`
-	Status     uint8  `orm:"column(status)" description:"状态，1-正常，0-删除"`
-	CreateTime uint   `orm:"column(create_time)" description:"创建时间"`
-	UpdateTime uint   `orm:"column(update_time)" description:"更新时间"`
+	IsShow     int    `orm:"column(is_show)" description:"是否显示，0-隐藏，1-显示"`
+	UserId     int64  `orm:"column(user_id)" description:"操作者ID"`
+	CreateId   int64  `orm:"column(create_id)" description:"创建者ID"`
+	UpdateId   int64  `orm:"column(update_id)" description:"修改者ID"`
+	Status     int    `orm:"column(status)" description:"状态，1-正常，0-删除"`
+	CreateTime int64  `orm:"column(create_time)" description:"创建时间"`
+	UpdateTime int64  `orm:"column(update_time)" description:"更新时间"`
 }
 
 func (t *SysAuth) TableName() string {
@@ -51,7 +51,7 @@ func AddSysAuth(m *SysAuth) (id int64, err error) {
 
 // GetSysAuthById retrieves SysAuth by Id. Returns error if
 // Id doesn't exist
-func GetSysAuthById(id int) (v *SysAuth, err error) {
+func GetSysAuthById(id int64) (v *SysAuth, err error) {
 	o := orm.NewOrm()
 	v = &SysAuth{Id: id}
 	if err = o.Read(v); err == nil {
@@ -169,9 +169,16 @@ func UpdateSysAuthById(m *SysAuth) (err error) {
 	return
 }
 
+func (a *SysAuth) UpdateSysAuth(fields ...string) error {
+	if _, err := orm.NewOrm().Update(a, fields...); err != nil {
+		return err
+	}
+	return nil
+}
+
 // DeleteSysAuth deletes SysAuth by Id and returns error if
 // the record to be deleted doesn't exist
-func DeleteSysAuth(id int) (err error) {
+func DeleteSysAuth(id int64) (err error) {
 	o := orm.NewOrm()
 	v := SysAuth{Id: id}
 	// ascertain id exists in the database

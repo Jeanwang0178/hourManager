@@ -1,10 +1,11 @@
-/**********************************************
-** @Des: This file ...
-** @Author: haodaquan
-** @Date:   2017-09-08 00:24:25
-** @Last Modified by:   haodaquan
-** @Last Modified time: 2017-09-17 10:12:06
-***********************************************/
+/**
+* @Project: hourManager
+* @Package
+* @Description: TODO
+* @author : wj
+* @date Date : 2018/12/08/ 12:00
+* @version V1.0
+ */
 
 package utils
 
@@ -41,7 +42,7 @@ func IsEmail(b []byte) bool {
 
 func Password(len int, pwdO string) (pwd string, salt string) {
 	salt = GetRandomString(4)
-	defaultPwd := "george518"
+	defaultPwd := "Tang3zang"
 	if pwdO != "" {
 		defaultPwd = pwdO
 	}

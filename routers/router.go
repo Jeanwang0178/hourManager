@@ -14,5 +14,10 @@ func init() {
 	beego.Router("/no_auth", &controllers.LoginController{}, "*:NoAuth")
 
 	beego.Router("/home", &controllers.HomeController{}, "*:Index")
+	beego.Router("/home/start", &controllers.HomeController{}, "*:Start")
+
+	beego.AutoRouter(&controllers.AuthController{})
+	beego.AutoRouter(&controllers.RoleController{})
+	beego.AutoRouter(&controllers.UserController{})
 
 }

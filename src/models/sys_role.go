@@ -18,14 +18,14 @@ import (
 )
 
 type SysRole struct {
-	Id         int    `orm:"column(id);auto" description:"主键ID"`
+	Id         int64  `orm:"column(id);auto" description:"主键ID"`
 	RoleName   string `orm:"column(role_name);size(32)" description:"角色名称"`
 	Detail     string `orm:"column(detail);size(255)" description:"备注"`
-	CreateId   uint   `orm:"column(create_id)" description:"创建者ID"`
-	UpdateId   uint   `orm:"column(update_id)" description:"修改这ID"`
-	Status     uint8  `orm:"column(status)" description:"状态1-正常，0-删除"`
-	CreateTime uint   `orm:"column(create_time)" description:"添加时间"`
-	UpdateTime uint   `orm:"column(update_time)" description:"修改时间"`
+	CreateId   int64  `orm:"column(create_id)" description:"创建者ID"`
+	UpdateId   int64  `orm:"column(update_id)" description:"修改这ID"`
+	Status     int    `orm:"column(status)" description:"状态1-正常，0-删除"`
+	CreateTime int64  `orm:"column(create_time)" description:"添加时间"`
+	UpdateTime int64  `orm:"column(update_time)" description:"修改时间"`
 }
 
 func (t *SysRole) TableName() string {
@@ -46,13 +46,28 @@ func AddSysRole(m *SysRole) (id int64, err error) {
 
 // GetSysRoleById retrieves SysRole by Id. Returns error if
 // Id doesn't exist
-func GetSysRoleById(id int) (v *SysRole, err error) {
+func GetSysRoleById(id int64) (v *SysRole, err error) {
 	o := orm.NewOrm()
 	v = &SysRole{Id: id}
 	if err = o.Read(v); err == nil {
 		return v, nil
 	}
 	return nil, err
+}
+
+func GetSysRoleList(page, pageSize int, filters ...interface{}) ([]*SysRole, int64) {
+	offset := (page - 1) * pageSize
+	list := make([]*SysRole, 0)
+	query := orm.NewOrm().QueryTable("sys_role")
+	if len(filters) > 0 {
+		l := len(filters)
+		for k := 0; k < l; k += 2 {
+			query = query.Filter(filters[k].(string), filters[k+1])
+		}
+	}
+	total, _ := query.Count()
+	query.OrderBy("-id").Limit(pageSize, offset).All(&list)
+	return list, total
 }
 
 // GetAllSysRole retrieves all SysRole matches certain condition. Returns empty list if
@@ -148,9 +163,16 @@ func UpdateSysRoleById(m *SysRole) (err error) {
 	return
 }
 
+func (r *SysRole) UpdateSysRole(fields ...string) error {
+	if _, err := orm.NewOrm().Update(r, fields...); err != nil {
+		return err
+	}
+	return nil
+}
+
 // DeleteSysRole deletes SysRole by Id and returns error if
 // the record to be deleted doesn't exist
-func DeleteSysRole(id int) (err error) {
+func DeleteSysRole(id int64) (err error) {
 	o := orm.NewOrm()
 	v := SysRole{Id: id}
 	// ascertain id exists in the database
