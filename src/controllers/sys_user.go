@@ -25,13 +25,12 @@ type UserController struct {
 }
 
 func (self *UserController) List() {
-	self.Data["pageTitle"] = "管理员管理"
+	self.Data["pageTitle"] = "用户管理"
 	self.display()
-	//self.TplName = "admin/list.html"
 }
 
 func (self *UserController) Add() {
-	self.Data["pageTitle"] = "新增管理员"
+	self.Data["pageTitle"] = "新增用户"
 
 	// 角色
 	filters := make([]interface{}, 0)
@@ -51,20 +50,22 @@ func (self *UserController) Add() {
 }
 
 func (self *UserController) Edit() {
-	self.Data["pageTitle"] = "编辑管理员"
+	self.Data["pageTitle"] = "编辑用户"
 
 	id, _ := self.GetInt64("id")
-	Admin, _ := models.GetSysUserById(id)
+	sysUser, _ := models.GetSysUserById(id)
 	row := make(map[string]interface{})
-	row["id"] = Admin.Id
-	row["login_name"] = Admin.LoginName
-	row["real_name"] = Admin.RealName
-	row["phone"] = Admin.Phone
-	row["email"] = Admin.Email
-	row["role_ids"] = Admin.RoleIds
-	self.Data["admin"] = row
+	row["id"] = sysUser.Id
 
-	role_ids := strings.Split(Admin.RoleIds, ",")
+	row["company_name"] = sysUser.CompanyName
+	row["login_name"] = sysUser.LoginName
+	row["real_name"] = sysUser.RealName
+	row["phone"] = sysUser.Phone
+	row["email"] = sysUser.Email
+	row["role_ids"] = sysUser.RoleIds
+	self.Data["user"] = row
+
+	role_ids := strings.Split(sysUser.RoleIds, ",")
 
 	filters := make([]interface{}, 0)
 	filters = append(filters, "status", 1)
@@ -92,6 +93,7 @@ func (self *UserController) AjaxSave() {
 	userId, _ := self.GetInt64("id")
 	if userId == 0 {
 		user := new(models.SysUser)
+		user.CompanyName = strings.TrimSpace(self.GetString("company_name"))
 		user.LoginName = strings.TrimSpace(self.GetString("login_name"))
 		user.RealName = strings.TrimSpace(self.GetString("real_name"))
 		user.Phone = strings.TrimSpace(self.GetString("phone"))
@@ -124,6 +126,7 @@ func (self *UserController) AjaxSave() {
 	newUser.Id = userId
 	newUser.UpdateTime = time.Now().Unix()
 	newUser.UpdateId = self.userId
+	newUser.CompanyName = strings.TrimSpace(self.GetString("company_name"))
 	newUser.LoginName = strings.TrimSpace(self.GetString("login_name"))
 	newUser.RealName = strings.TrimSpace(self.GetString("real_name"))
 	newUser.Phone = strings.TrimSpace(self.GetString("phone"))
@@ -197,6 +200,7 @@ func (self *UserController) Table() {
 	for k, v := range result {
 		row := make(map[string]interface{})
 		row["id"] = v.Id
+		row["company_name"] = v.CompanyName
 		row["login_name"] = v.LoginName
 		row["real_name"] = v.RealName
 		row["phone"] = v.Phone
@@ -217,11 +221,12 @@ func (this *UserController) Modify() {
 	user, _ := models.GetSysUserById(id)
 	row := make(map[string]interface{})
 	row["id"] = user.Id
+	row["company_name"] = user.CompanyName
 	row["login_name"] = user.LoginName
 	row["real_name"] = user.RealName
 	row["phone"] = user.Phone
 	row["email"] = user.Email
-	this.Data["admin"] = row
+	this.Data["user"] = row
 	utils.Che.Set("uid"+strconv.FormatInt(this.user.Id, 10), nil, cache.DefaultExpiration)
 	this.display()
 }
@@ -233,6 +238,7 @@ func (this *UserController) AjaxModify() {
 	user.Id = userId
 	user.UpdateTime = time.Now().Unix()
 	user.UpdateId = this.userId
+	user.CompanyName = strings.TrimSpace(this.GetString("company_name"))
 	user.LoginName = strings.TrimSpace(this.GetString("login_name"))
 	user.RealName = strings.TrimSpace(this.GetString("real_name"))
 	user.Phone = strings.TrimSpace(this.GetString("phone"))

@@ -1,0 +1,101 @@
+<div class="layui-layout layui-layout-admin" style="padding-left: 40px;margin-top: 20px;">
+
+<form class="layui-form" action="" method="post" >
+    <div class="layui-form-item">
+        <input type="hidden" id="id" name="id" value="{{.manHour.Id}}">
+        <div  class="layui-inline layui-col-md8">
+            <label class="layui-form-label">项目</label>
+
+            <div class="layui-input-inline">
+                <select name="project_id" lay-verify="required"  lay-search="" style="width: 100%">
+                    {{range $index,$elem := .sourceList}}
+                        <option value="{{$elem.ProjectId}}"  {{if eq $.manHour.ProjectId $elem.ProjectId }} selected {{end}} > {{$elem.ProjectName}}</option>
+                    {{end}}
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-inline layui-col-md4">
+            <label class="layui-form-label">日期</label>
+            <div class="layui-input-inline">
+                <input id="formAdvDateRange01" name="work_date" type="text" lay-verify="required" value="{{$.workDateStr}}"  placeholder="日期" class="layui-input date-icon"/>
+            </div>
+        </div>
+        <div class="layui-inline layui-col-md4">
+            <label class="layui-form-label">本日用时</label>
+            <div class="layui-input-inline">
+                <input type="text" name="man_hour" id="man_hour" lay-verify="required"  autocomplete="off" value="{{.manHour.ManHour}}" placeholder="小时" class="layui-input" value="">
+            </div>
+        </div>
+        <div class="layui-inline layui-col-md8">
+            <label class="layui-form-label">当日工作目标</label>
+            <div class="layui-input-block">
+                <textarea name="task_target" placeholder="当日工作目标" lay-verify="required"  class="layui-textarea">{{.manHour.TaskTarget}}</textarea>
+            </div>
+        </div>
+        <div class="layui-inline layui-col-md8">
+            <label class="layui-form-label">任务进展情况</label>
+            <div class="layui-input-block">
+                <textarea name="task_progress" placeholder="任务进展情况" lay-verify="required"  class="layui-textarea">{{.manHour.TaskProgress}}</textarea>
+            </div>
+        </div>
+    
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="sub">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+</form>
+</div>
+<script>
+var $;
+    layui.config({
+            base : "js/"
+    }).use(['form','element','layer', 'util', 'laydate','jquery'],function(){
+        var form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成功
+        var $ = layui.jquery;
+        var role_ids = [];
+        var laydate = layui.laydate;
+
+        form.on('checkbox(role_ids)', function(data){
+            if(data.elem.checked==true){
+                role_ids.push(data.value)
+            }else{
+                $.each(role_ids,function(index,item){  
+                    // index是索引值（即下标）   item是每次遍历得到的值；
+                    if(item==data.value){
+                        role_ids.splice(index,1);
+                    }
+                });
+            }
+            $("#roleids").val(role_ids.join(","));
+        });
+
+        // 渲染laydate
+        laydate.render({
+            elem: '#formAdvDateRange01',
+            range: false
+        });
+
+
+        form.on('submit(sub)', function(data){
+            var form_data = $("form").serialize();
+            $.post('{{urlfor "ManHourController.AjaxSave"}}', form_data, function (out) {
+                if (out.status == 0) {
+                    layer.msg("操作成功",{icon: 1},function () {
+                        window.location.href='{{urlfor "ManHourController.List"}}'
+                    })
+                } else {
+                    layer.msg(out.message)
+                }
+            }, "json");
+            return false;
+        });
+      
+      //但是，如果你的HTML是动态生成的，自动渲染就会失效
+      //因此你需要在相应的地方，执行下述方法来手动渲染，跟这类似的还有 element.init();
+      form.render();
+}); 
+</script>

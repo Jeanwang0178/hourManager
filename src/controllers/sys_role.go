@@ -138,7 +138,7 @@ func (this *RoleController) Table() {
 	filters := make([]interface{}, 0)
 	filters = append(filters, "status", 1)
 	if roleName != "" {
-		filters = append(filters, "role_name__icontains", roleName)
+		filters = append(filters, "role_name_icontains", roleName)
 	}
 	result, count := models.GetSysRoleList(page, this.pageSize, filters...)
 	list := make([]map[string]interface{}, len(result))

@@ -20,4 +20,8 @@ func init() {
 	beego.AutoRouter(&controllers.RoleController{})
 	beego.AutoRouter(&controllers.UserController{})
 
+	beego.AutoRouter(&controllers.ProjectController{})
+	beego.AutoRouter(&controllers.ProjectUserController{})
+	beego.AutoRouter(&controllers.ManHourController{})
+
 }

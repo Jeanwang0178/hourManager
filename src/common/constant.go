@@ -23,3 +23,9 @@ const ShowKafka = "kafka"
 
 //TAILF
 const ShowTailf = "tailf"
+
+//启用、正常
+const Enable = "1"
+
+//停用、删除
+const Disable = "0"

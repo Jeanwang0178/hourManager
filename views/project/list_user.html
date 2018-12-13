@@ -1,30 +1,14 @@
 <div class="layui-layout layui-layout-admin" style="padding-left: 20px;">
-    <div class="layui-row" style="margin-top: 20px;">
-        <div class="layui-col-xs6">
-            <a class="layui-btn" data-type="tabAdd" href="/user/add">新增</a>
-        </div>
-        <div class="layui-col-xs6 search_text">
+
             <form class="layui-form" action="" onsubmit="javascript:return false;">
+                <input type="hidden" id="projectId" name="projectId" value="{{.projectId}}" />
                 <div class="demoTable">
-                    <div class="layui-inline" style="width: 40%">
-                        <input class="layui-input" name="realName" id="realName" autocomplete="off" placeholder="真实姓名" >
-                    </div>
-                    <button class="layui-btn" data-type="reload">查询</button>
+                    <button class="layui-btn" lay-submit="" lay-filter="add" id="add_source">添加</button>
                 </div>
             </form>
-            
-        </div>
-    </div>
 
     <table class="layui-hide" id="table_list" lay-filter="table_filter">
     </table>
-
-    <script type="text/html" id="bar">
-       <!--  <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a> -->
-        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="status">启|禁</a>
-
-    </script>
 </div>
 <script>
 
@@ -34,19 +18,19 @@
         var element = layui.element;
 
         //方法级渲染
-        table.render({
+        var insl= table.render({
             elem: '#table_list'
-            ,url: '/user/table'
+            ,url: '/projectuser/tableuser?isExists={{.isExists}}'
             ,cols: [[
-                // {checkbox: true, fixed: true},
-                {field:'id', title: 'ID', align:'center',sort: true, width:150}
-                ,{field:'company_name',title: '公司名称'}
-                ,{field:'login_name',title: '登录账号'}
-                ,{field:'real_name', title: '真实姓名'}
-                ,{field:'phone', title: '联系电话'}
-                ,{field:'email', title: '电子邮箱'}
+                {checkbox: true, fixed: true},
+                {field:'id', title: 'ID', align:'center',sort: true, width:80}
+                ,{field:'company_name',title: '公司名称', width:120}
+                ,{field:'login_name',title: '登录账号', width:120}
+                ,{field:'real_name', title: '真实姓名', width:120}
+                ,{field:'phone', title: '联系电话', width:120}
+                ,{field:'email', title: '电子邮箱', width:220}
                 ,{field:'status_text', title: '状态'}
-                ,{fixed: 'right', width:160, align:'center', toolbar: '#bar'}
+                ,{fixed: 'right', width:60, align:'center', toolbar: '#bar'}
             ]]
             ,id: 'listReload'
             ,page: true
@@ -63,6 +47,38 @@
             }
         };
 
+        $("#add_source").click(function () {
+            if($("#projectId").val() == ""){
+                layer.ms("请重新选择项目,项目ID不能为空");
+            }
+            var checkStatus = table.checkStatus('listReload');
+            var ids = "";
+            $.each(checkStatus["data"],function(k,v){
+                if (v.status==1) {
+                    ids += v.id+",";
+                }
+            })
+            ids = (ids.substring(ids.length-1)==',')?ids.substring(0,ids.length-1):ids;
+            if (!ids) {
+                layer.msg("请选择状态需要添加的用户")
+                return false;
+            }
+
+            var jsData = {'user_ids':ids,'project_id':$("#projectId").val()}
+            layer.load(2);
+            $.post('{{urlfor "ProjectUserController.AjaxSave"}}', jsData, function (out) {
+                if (out.status == 0) {
+                    layer.msg("操作成功",{icon: 1},function () {
+                        window.parent.layer.closeAll();
+                        window.parent.location.reload();
+                    })
+                } else {
+                    layer.msg(out.message)
+                }
+            }, "json");
+
+        })
+
         //监听工具条
         table.on('tool(table_filter)', function(obj){
             var data = obj.data;
@@ -77,8 +93,8 @@
                     status = "enable";
                 }
                 if (data.id==1 && obj.event === 'disable') {
-                   layer.msg('超级管理员不允许操作');
-                   return false;
+                    layer.msg('超级管理员不允许操作');
+                    return false;
                 }
 
                 layer.confirm('真的'+acts+'【'+data.login_name+'】账号么', function(index){
@@ -96,7 +112,7 @@
                     // obj.del();
                     layer.close(index);
                 })
-                
+
             }else{
                 layer.msg('操作不存在');
             }

@@ -75,7 +75,7 @@ func (this *BaseController) auth() {
 
 			isHasAuth := strings.Contains(this.allowUrl, this.controllerName+"/"+this.actionName)
 			//不需要权限检查
-			noAuth := "ajaxmodify/ajaxsave/ajaxdel/table/loginin/loginout/getnodes/start/show/ajaxapisave/index/group/public/env/code/apidetail"
+			noAuth := "ajaxmodify/ajaxsave/ajaxdel/table/tableuser/listuser/prouserlist/list/loginin/loginout/getnodes/start/show/ajaxapisave/index/group/public/env/code/apidetail"
 			isNoAuth := strings.Contains(noAuth, this.actionName)
 			if isHasAuth == false && isNoAuth == false {
 				//this.Ctx.WriteString("没有权限")

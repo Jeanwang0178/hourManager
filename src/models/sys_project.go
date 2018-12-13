@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/astaxie/beego/orm"
+	"hourManager/src/common"
 )
 
 type SysProject struct {
@@ -45,6 +46,39 @@ func GetSysProjectById(id int64) (v *SysProject, err error) {
 		return v, nil
 	}
 	return nil, err
+}
+
+// GetSysUserByName retrieves User by loginName. Returns error if
+// no records exist
+func GetSysProjectByName(projectName string) (*SysProject, error) {
+	p := new(SysProject)
+	err := orm.NewOrm().QueryTable("sys_project").Filter("project_name", projectName).Filter("status", common.Enable).One(p)
+	if err != nil {
+		return nil, err
+	}
+	return p, nil
+}
+
+func (p *SysProject) UpdateSysProject(fields ...string) error {
+	if _, err := orm.NewOrm().Update(p, fields...); err != nil {
+		return err
+	}
+	return nil
+}
+
+func GetSysProjectList(page, pageSize int, filters ...interface{}) ([]*SysProject, int64) {
+	offset := (page - 1) * pageSize
+	list := make([]*SysProject, 0)
+	query := orm.NewOrm().QueryTable("sys_project")
+	if len(filters) > 0 {
+		l := len(filters)
+		for k := 0; k < l; k += 2 {
+			query = query.Filter(filters[k].(string), filters[k+1])
+		}
+	}
+	total, _ := query.Count()
+	query.OrderBy("-id").Limit(pageSize, offset).All(&list)
+	return list, total
 }
 
 // GetAllSysProject retrieves all SysProject matches certain condition. Returns empty list if
