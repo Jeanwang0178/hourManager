@@ -44,6 +44,7 @@ func ExportExcel(openFile *excelize.File, sheetName string, details []interface{
 				for _, slice := range details {
 					openFile.SetSheetRow(sheetName, "B"+strconv.Itoa(rowIndex), slice)
 					openFile.SetRowHeight(sheetName, rowIndex, height)
+
 					rowIndex++
 					if rowIndex >= i+7 {
 						openFile.InsertRow(sheetName, rowIndex)
