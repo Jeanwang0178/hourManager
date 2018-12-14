@@ -8,17 +8,18 @@ import (
 
 	"github.com/astaxie/beego/orm"
 	"hourManager/src/common"
+	"time"
 )
 
 type SysProject struct {
-	Id          int64  `orm:"column(id);auto" description:"主键ID"`
-	ProjectName string `orm:"column(project_name);size(32)" description:"项目名称"`
-	Detail      string `orm:"column(detail);size(255)" description:"备注"`
-	CreateId    int64  `orm:"column(create_id)" description:"创建者ID"`
-	UpdateId    int64  `orm:"column(update_id)" description:"修改这ID"`
-	Status      uint8  `orm:"column(status)" description:"状态1-正常，0-删除"`
-	CreateTime  int64  `orm:"column(create_time)" description:"添加时间"`
-	UpdateTime  int64  `orm:"column(update_time)" description:"修改时间"`
+	Id          int64     `orm:"column(id);auto" description:"主键ID"`
+	ProjectName string    `orm:"column(project_name);size(32)" description:"项目名称"`
+	Detail      string    `orm:"column(detail);size(255)" description:"备注"`
+	CreateId    int64     `orm:"column(create_id)" description:"创建者ID"`
+	UpdateId    int64     `orm:"column(update_id)" description:"修改这ID"`
+	Status      uint8     `orm:"column(status)" description:"状态1-正常，0-删除"`
+	CreateTime  time.Time `orm:"column(create_time);type(datetime);null" description:"创建时间"`
+	UpdateTime  time.Time `orm:"column(update_time);type(datetime);null" description:"更新时间"`
 }
 
 func (t *SysProject) TableName() string {

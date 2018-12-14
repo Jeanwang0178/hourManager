@@ -99,7 +99,7 @@ func (self *UserController) AjaxSave() {
 		user.Phone = strings.TrimSpace(self.GetString("phone"))
 		user.Email = strings.TrimSpace(self.GetString("email"))
 		user.RoleIds = strings.TrimSpace(self.GetString("roleids"))
-		user.UpdateTime = time.Now().Unix()
+		user.UpdateTime = time.Now()
 		user.UpdateId = self.userId
 		user.Status = 1
 
@@ -113,7 +113,7 @@ func (self *UserController) AjaxSave() {
 		pwd, salt := libs.Password(4, "")
 		user.Password = pwd
 		user.Salt = salt
-		user.CreateTime = time.Now().Unix()
+		user.CreateTime = time.Now()
 		user.CreateId = self.userId
 		if _, err := models.AddSysUser(user); err != nil {
 			self.ajaxMsg(err.Error(), MSG_ERR)
@@ -124,7 +124,7 @@ func (self *UserController) AjaxSave() {
 	newUser, _ := models.GetSysUserById(userId)
 	//修改
 	newUser.Id = userId
-	newUser.UpdateTime = time.Now().Unix()
+	newUser.UpdateTime = time.Now()
 	newUser.UpdateId = self.userId
 	newUser.CompanyName = strings.TrimSpace(self.GetString("company_name"))
 	newUser.LoginName = strings.TrimSpace(self.GetString("login_name"))
@@ -132,7 +132,7 @@ func (self *UserController) AjaxSave() {
 	newUser.Phone = strings.TrimSpace(self.GetString("phone"))
 	newUser.Email = strings.TrimSpace(self.GetString("email"))
 	newUser.RoleIds = strings.TrimSpace(self.GetString("roleids"))
-	newUser.UpdateTime = time.Now().Unix()
+	newUser.UpdateTime = time.Now()
 	newUser.UpdateId = self.userId
 	newUser.Status = 1
 
@@ -161,7 +161,7 @@ func (self *UserController) AjaxDel() {
 		userStatus = 1
 	}
 	user, _ := models.GetSysUserById(userId)
-	user.UpdateTime = time.Now().Unix()
+	user.UpdateTime = time.Now()
 	user.Status = userStatus
 	user.Id = userId
 
@@ -206,8 +206,8 @@ func (self *UserController) Table() {
 		row["phone"] = v.Phone
 		row["email"] = v.Email
 		row["role_ids"] = v.RoleIds
-		row["create_time"] = beego.Date(time.Unix(v.CreateTime, 0), "Y-m-d H:i:s")
-		row["update_time"] = beego.Date(time.Unix(v.UpdateTime, 0), "Y-m-d H:i:s")
+		row["create_time"] = beego.Date(v.CreateTime, "Y-m-d H:i:s")
+		row["update_time"] = beego.Date(v.UpdateTime, "Y-m-d H:i:s")
 		row["status"] = v.Status
 		row["status_text"] = StatusText[v.Status]
 		list[k] = row
@@ -236,7 +236,7 @@ func (this *UserController) AjaxModify() {
 	user, _ := models.GetSysUserById(userId)
 	//修改
 	user.Id = userId
-	user.UpdateTime = time.Now().Unix()
+	user.UpdateTime = time.Now()
 	user.UpdateId = this.userId
 	user.CompanyName = strings.TrimSpace(this.GetString("company_name"))
 	user.LoginName = strings.TrimSpace(this.GetString("login_name"))
@@ -263,7 +263,7 @@ func (this *UserController) AjaxModify() {
 		user.Password = pwd
 		user.Salt = salt
 	}
-	user.UpdateTime = time.Now().Unix()
+	user.UpdateTime = time.Now()
 	user.UpdateId = this.userId
 	user.Status = 1
 

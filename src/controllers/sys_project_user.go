@@ -54,12 +54,12 @@ func (this *ProjectUserController) AjaxSave() {
 		proUser := new(models.SysProjectUser)
 		proUser.ProjectId = projectId
 		proUser.UserId = userId
-		proUser.CreateTime = time.Now().Unix()
-		proUser.UpdateTime = time.Now().Unix()
+		proUser.CreateTime = time.Now()
+		proUser.UpdateTime = time.Now()
 		proUser.Status = 1
 		//新增
-		proUser.CreateTime = time.Now().Unix()
-		proUser.UpdateTime = time.Now().Unix()
+		proUser.CreateTime = time.Now()
+		proUser.UpdateTime = time.Now()
 		proUser.CreateId = this.userId
 		proUser.UpdateId = this.userId
 		proUsers = append(proUsers, *proUser)
@@ -80,7 +80,7 @@ func (this *ProjectUserController) AjaxDel() {
 	proUser, _ := models.GetSysProjectUserById(role_id)
 	proUser.Status = 0
 	proUser.Id = role_id
-	proUser.UpdateTime = time.Now().Unix()
+	proUser.UpdateTime = time.Now()
 
 	if err := proUser.UpdateSysProjectUser(); err != nil {
 		this.ajaxMsg(err.Error(), MSG_ERR)
@@ -123,8 +123,8 @@ func (this *ProjectUserController) TableUser() {
 		row["phone"] = v.Phone
 		row["email"] = v.Email
 		row["role_ids"] = v.RoleIds
-		row["create_time"] = beego.Date(time.Unix(v.CreateTime, 0), "Y-m-d H:i:s")
-		row["update_time"] = beego.Date(time.Unix(v.UpdateTime, 0), "Y-m-d H:i:s")
+		row["create_time"] = beego.Date(v.CreateTime, "Y-m-d H:i:s")
+		row["update_time"] = beego.Date(v.UpdateTime, "Y-m-d H:i:s")
 		row["status"] = v.Status
 		row["status_text"] = StatusText[v.Status]
 		list[k] = row
@@ -163,8 +163,8 @@ func (this *ProjectUserController) ProUserList() {
 		row["email"] = v.Email
 		row["role_ids"] = v.RoleIds
 		row["create_user"] = v.CreateUser
-		row["create_time"] = beego.Date(time.Unix(v.CreateTime, 0), "Y-m-d H:i:s")
-		row["update_time"] = beego.Date(time.Unix(v.UpdateTime, 0), "Y-m-d H:i:s")
+		row["create_time"] = beego.Date(v.CreateTime, "Y-m-d H:i:s")
+		row["update_time"] = beego.Date(v.UpdateTime, "Y-m-d H:i:s")
 		row["status"] = v.Status
 		row["status_text"] = StatusText[v.Status]
 		list[k] = row
@@ -199,8 +199,8 @@ func (this *ProjectUserController) Table() {
 		row["id"] = v.Id
 		row["project_id"] = v.ProjectId
 		row["user_id"] = v.UserId
-		row["create_time"] = beego.Date(time.Unix(v.CreateTime, 0), "Y-m-d H:i:s")
-		row["update_time"] = beego.Date(time.Unix(v.UpdateTime, 0), "Y-m-d H:i:s")
+		row["create_time"] = beego.Date(v.CreateTime, "Y-m-d H:i:s")
+		row["update_time"] = beego.Date(v.UpdateTime, "Y-m-d H:i:s")
 		list[k] = row
 	}
 	this.ajaxList("成功", MSG_OK, count, list)

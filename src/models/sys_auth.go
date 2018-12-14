@@ -15,22 +15,23 @@ import (
 	"strings"
 
 	"github.com/astaxie/beego/orm"
+	"time"
 )
 
 type SysAuth struct {
-	Id         int64  `orm:"column(id);auto" description:"自增ID"`
-	Pid        int64  `orm:"column(pid)" description:"上级ID，0为顶级"`
-	AuthName   string `orm:"column(auth_name);size(64)" description:"权限名称"`
-	AuthUrl    string `orm:"column(auth_url);size(255)" description:"URL地址"`
-	Sort       int    `orm:"column(sort)" description:"排序，越小越前"`
-	Icon       string `orm:"column(icon);size(255)"`
-	IsShow     int    `orm:"column(is_show)" description:"是否显示，0-隐藏，1-显示"`
-	UserId     int64  `orm:"column(user_id)" description:"操作者ID"`
-	CreateId   int64  `orm:"column(create_id)" description:"创建者ID"`
-	UpdateId   int64  `orm:"column(update_id)" description:"修改者ID"`
-	Status     int    `orm:"column(status)" description:"状态，1-正常，0-删除"`
-	CreateTime int64  `orm:"column(create_time)" description:"创建时间"`
-	UpdateTime int64  `orm:"column(update_time)" description:"更新时间"`
+	Id         int64     `orm:"column(id);auto" description:"自增ID"`
+	Pid        int64     `orm:"column(pid)" description:"上级ID，0为顶级"`
+	AuthName   string    `orm:"column(auth_name);size(64)" description:"权限名称"`
+	AuthUrl    string    `orm:"column(auth_url);size(255)" description:"URL地址"`
+	Sort       int       `orm:"column(sort)" description:"排序，越小越前"`
+	Icon       string    `orm:"column(icon);size(255)"`
+	IsShow     int       `orm:"column(is_show)" description:"是否显示，0-隐藏，1-显示"`
+	UserId     int64     `orm:"column(user_id)" description:"操作者ID"`
+	CreateId   int64     `orm:"column(create_id)" description:"创建者ID"`
+	UpdateId   int64     `orm:"column(update_id)" description:"修改者ID"`
+	Status     int       `orm:"column(status)" description:"状态，1-正常，0-删除"`
+	CreateTime time.Time `orm:"column(create_time);type(datetime);null" description:"创建时间"`
+	UpdateTime time.Time `orm:"column(update_time);type(datetime);null" description:"更新时间"`
 }
 
 func (t *SysAuth) TableName() string {

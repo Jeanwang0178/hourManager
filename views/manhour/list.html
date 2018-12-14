@@ -1,12 +1,12 @@
 <div class="layui-layout layui-layout-admin" style="padding-left: 20px;">
 
     <div class="layui-row" style="margin-top: 20px;">
-
+        {{if eq .isFilter "y"}}
         <div class="layui-col-xs6">
             <a class="layui-btn" data-type="tabAdd" href="/manhour/add">新增</a>
         </div>
-
-        <div class="layui-col-xs6 search_text">
+        {{end}}
+        <div class="layui-col-xs6  {{if eq .isFilter "y"}} search_text {{end}}">
             <form class="layui-form" action="" id="queryForm" >
                 <div class="demoTable">
                     <div class="layui-inline">
@@ -22,7 +22,7 @@
                     </div>
                     {{if ne .isFilter "y"}}
                     <div class="layui-inline">
-                        <input class="layui-input" name="realName" id="realName" autocomplete="off" placeholder="真实姓名" value="{{.realName}}">
+                        <input class="layui-input" name="realName" id="realName" autocomplete="off" placeholder="姓名" value="{{.realName}}">
                     </div>
                     {{end}}
                     <a class="layui-btn" data-type="reload">查询</a>
@@ -37,9 +37,12 @@
     </table>
 
     <script type="text/html" id="bar">
-        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="status">删除</a>
-
+        {{if ne .isFilter "y"}}
+            <a class="layui-btn layui-btn-xs" lay-event="view">查看</a>
+        {{else}}
+            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="status">删除</a>
+        {{end}}
     </script>
 </div>
 <script>
@@ -62,16 +65,19 @@
             }
             ,cols: [[
                 {field:'id', title: 'ID', align:'center',sort: true, width:60}
-                ,{field:'project_name',title: '项目名称', width:160}
-                ,{field:'real_name', title: '姓名', width:100}
-                ,{field:'work_date', title: '日期', width:120}
+                ,{field:'project_name',title: '项目名称',sort: true,  width:180}
+                ,{field:'real_name', title: '姓名',sort: true, width:120}
+                ,{field:'work_date', title: '日期',sort: true, width:120}
                 ,{field:'task_target', title: '当日工作目标'}
                 ,{field:'task_progress', title: '任务进展情况'}
                 ,{field:'man_hour', title: '本日用时', width:100}
                 ,{field:'create_time', title: '创建时间', width:160}
                 ,{field:'update_time', title: '修改时间', width:160}
-                ,{fixed: 'right', width:160, align:'center', toolbar: '#bar'}
-            ]]
+                ,{fixed: 'right', width:120, align:'center', toolbar: '#bar'}
+            ]],
+            done:function () {
+                $("[data-field='id']").css('display','none');
+            }
             ,id: 'listReload'
             ,page: true
             ,height: "full-130"
@@ -106,6 +112,8 @@
             var data = obj.data;
             if(obj.event === 'edit'){
                 window.location.href="/manhour/edit?id="+data.id
+            }else if(obj.event === 'view'){
+                window.location.href="/manhour/edit?id="+data.id+"&isView=y"
             } else if(obj.event === 'status'){
 
                 status = "disable";

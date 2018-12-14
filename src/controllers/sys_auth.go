@@ -83,14 +83,14 @@ func (this *AuthController) AjaxSave() {
 	auth.Sort, _ = this.GetInt("sort")
 	auth.IsShow, _ = this.GetInt("is_show")
 	auth.Icon = strings.TrimSpace(this.GetString("icon"))
-	auth.UpdateTime = time.Now().Unix()
+	auth.UpdateTime = time.Now()
 
 	auth.Status = 1
 
 	id, _ := this.GetInt64("id")
 	if id == 0 {
 		//新增
-		auth.CreateTime = time.Now().Unix()
+		auth.CreateTime = time.Now()
 		auth.CreateId = this.userId
 		auth.UpdateId = this.userId
 		if _, err := models.AddSysAuth(auth); err != nil {

@@ -10,17 +10,18 @@ import (
 	"github.com/astaxie/beego/orm"
 	"github.com/beego/bee/logger"
 	"strconv"
+	"time"
 )
 
 type SysProjectUser struct {
-	Id         int64 `orm:"column(id);auto" description:"主键ID"`
-	ProjectId  int64 `orm:"column(project_id)" description:"项目ID"`
-	UserId     int64 `orm:"column(user_id)" description:"用户ID"`
-	CreateId   int64 `orm:"column(create_id)" description:"创建者ID"`
-	UpdateId   int64 `orm:"column(update_id)" description:"修改者ID"`
-	Status     int8  `orm:"column(status)" description:"状态1-正常，0-删除"`
-	CreateTime int64 `orm:"column(create_time)" description:"添加时间"`
-	UpdateTime int64 `orm:"column(update_time)" description:"修改时间"`
+	Id         int64     `orm:"column(id);auto" description:"主键ID"`
+	ProjectId  int64     `orm:"column(project_id)" description:"项目ID"`
+	UserId     int64     `orm:"column(user_id)" description:"用户ID"`
+	CreateId   int64     `orm:"column(create_id)" description:"创建者ID"`
+	UpdateId   int64     `orm:"column(update_id)" description:"修改者ID"`
+	Status     int8      `orm:"column(status)" description:"状态1-正常，0-删除"`
+	CreateTime time.Time `orm:"column(create_time);type(datetime);null" description:"创建时间"`
+	UpdateTime time.Time `orm:"column(update_time);type(datetime);null" description:"更新时间"`
 }
 
 func (t *SysProjectUser) TableName() string {

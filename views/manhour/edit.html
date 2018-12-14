@@ -42,8 +42,11 @@
     
         <div class="layui-form-item">
             <div class="layui-input-block">
-                <button class="layui-btn" lay-submit="" lay-filter="sub">立即提交</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                {{if ne .isView "y"}}
+                    <button class="layui-btn" lay-submit="" lay-filter="sub">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                {{end}}
+                    <a class="layui-btn layui-bg-green" lay-submit="" lay-filter="back">返回</a>
             </div>
         </div>
     </div>
@@ -93,6 +96,14 @@ var $;
             }, "json");
             return false;
         });
+
+        form.on('submit(back)',function () {
+            {{if ne .isView "y"}}
+                window.location.href='{{urlfor "ManHourController.List"}}'
+            {{else}}
+                window.location.href='{{urlfor "ManHourController.ListAll"}}'
+            {{end}}
+        })
       
       //但是，如果你的HTML是动态生成的，自动渲染就会失效
       //因此你需要在相应的地方，执行下述方法来手动渲染，跟这类似的还有 element.init();

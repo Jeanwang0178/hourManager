@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"bytes"
+	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"github.com/beego/bee/logger"
 	"strconv"
@@ -14,18 +15,18 @@ import (
 )
 
 type SysManHour struct {
-	Id           int64   `orm:"column(id);auto"`
-	ProjectId    int64   `orm:"column(project_id)" description:"项目ID"`
-	UserId       int64   `orm:"column(user_id)" description:"用户ID"`
-	WorkDate     int64   `orm:"column(work_date)" description:"日期"`
-	TaskTarget   string  `orm:"column(task_target);size(1024)" description:"当日工作目标"`
-	TaskProgress string  `orm:"column(task_progress);size(20)" description:"任务进展情况"`
-	ManHour      float64 `orm:"column(man_hour);null;digits(15);decimals(5)" description:"本日用时"`
-	Status       int     `orm:"column(status)" description:"状态，1-正常 0禁用"`
-	CreateId     int64   `orm:"column(create_id)" description:"创建者ID"`
-	UpdateId     int64   `orm:"column(update_id)" description:"修改者ID"`
-	CreateTime   int64   `orm:"column(create_time)" description:"创建时间"`
-	UpdateTime   int64   `orm:"column(update_time)" description:"修改时间"`
+	Id           int64     `orm:"column(id);auto"`
+	ProjectId    int64     `orm:"column(project_id)" description:"项目ID"`
+	UserId       int64     `orm:"column(user_id)" description:"用户ID"`
+	WorkDate     time.Time `orm:"column(work_date);type(datetime);null" description:"日期"`
+	TaskTarget   string    `orm:"column(task_target);size(1024)" description:"当日工作目标"`
+	TaskProgress string    `orm:"column(task_progress);size(20)" description:"任务进展情况"`
+	ManHour      float64   `orm:"column(man_hour);null;digits(15);decimals(5)" description:"本日用时"`
+	Status       int       `orm:"column(status)" description:"状态，1-正常 0禁用"`
+	CreateId     int64     `orm:"column(create_id)" description:"创建者ID"`
+	UpdateId     int64     `orm:"column(update_id)" description:"修改者ID"`
+	CreateTime   time.Time `orm:"column(create_time);type(datetime);null" description:"创建时间"`
+	UpdateTime   time.Time `orm:"column(update_time);type(datetime);null" description:"更新时间"`
 }
 
 func (t *SysManHour) TableName() string {
@@ -113,10 +114,10 @@ func GetSysManHourInfoByParam(page, pageSize int, filters map[string]interface{}
 	if beginDate != "" && endDate != "" {
 		totalSql.WriteString(" and a.work_date between ? and ? ")
 		querySql.WriteString(" and a.work_date between ? and ? ")
-		start, _ := time.Parse("2006-01-02 15:04:05", beginDate+" 00:00:00")
-		end, _ := time.Parse("2006-01-02 15:04:05", endDate+" 00:00:00")
-		params = append(params, start.Unix())
-		params = append(params, end.Unix())
+		start, _ := beego.DateParse(beginDate, "Y-m-d")
+		end, _ := beego.DateParse(endDate, "Y-m-d")
+		params = append(params, start)
+		params = append(params, end)
 	}
 
 	total, err := orm.NewOrm().Raw(totalSql.String(), params).RowsToMap(&res, "total", "count")

@@ -68,8 +68,8 @@ func (this *ProjectController) Table() {
 		row["id"] = v.Id
 		row["project_name"] = v.ProjectName
 		row["detail"] = v.Detail
-		row["create_time"] = beego.Date(time.Unix(v.CreateTime, 0), "Y-m-d H:i:s")
-		row["update_time"] = beego.Date(time.Unix(v.UpdateTime, 0), "Y-m-d H:i:s")
+		row["create_time"] = beego.Date(v.CreateTime, "Y-m-d H:i:s")
+		row["update_time"] = beego.Date(v.UpdateTime, "Y-m-d H:i:s")
 		list[k] = row
 	}
 	this.ajaxList("成功", MSG_OK, count, list)
@@ -84,8 +84,8 @@ func (this *ProjectController) AjaxSave() {
 		project.Detail = strings.TrimSpace(this.GetString("detail"))
 		project.CreateId = this.userId
 		project.UpdateId = this.userId
-		project.CreateTime = time.Now().Unix()
-		project.UpdateTime = time.Now().Unix()
+		project.CreateTime = time.Now()
+		project.UpdateTime = time.Now()
 		project.Status = 1
 
 		_, err := models.GetSysProjectByName(project.ProjectName)
@@ -105,7 +105,7 @@ func (this *ProjectController) AjaxSave() {
 	proUpdate.ProjectName = strings.TrimSpace(this.GetString("project_name"))
 	proUpdate.Detail = strings.TrimSpace(this.GetString("detail"))
 	proUpdate.UpdateId = this.userId
-	proUpdate.UpdateTime = time.Now().Unix()
+	proUpdate.UpdateTime = time.Now()
 	proUpdate.Status = 1
 
 	if err := proUpdate.UpdateSysProject(); err != nil {
@@ -118,7 +118,7 @@ func (this *ProjectController) AjaxDel() {
 
 	project_id, _ := this.GetInt64("id")
 	pro, _ := models.GetSysProjectById(project_id)
-	pro.UpdateTime = time.Now().Unix()
+	pro.UpdateTime = time.Now()
 	pro.UpdateId = this.userId
 	pro.Status = 0
 	pro.Id = project_id

@@ -58,15 +58,15 @@ func (this *RoleController) AjaxSave() {
 	role := new(models.SysRole)
 	role.RoleName = strings.TrimSpace(this.GetString("role_name"))
 	role.Detail = strings.TrimSpace(this.GetString("detail"))
-	role.CreateTime = time.Now().Unix()
-	role.UpdateTime = time.Now().Unix()
+	role.CreateTime = time.Now()
+	role.UpdateTime = time.Now()
 	role.Status = 1
 	auths := strings.TrimSpace(this.GetString("nodes_data"))
 	role_id, _ := this.GetInt64("id")
 	if role_id == 0 {
 		//新增
-		role.CreateTime = time.Now().Unix()
-		role.UpdateTime = time.Now().Unix()
+		role.CreateTime = time.Now()
+		role.UpdateTime = time.Now()
 		role.CreateId = this.userId
 		role.UpdateId = this.userId
 		if id, err := models.AddSysRole(role); err != nil {
@@ -85,7 +85,7 @@ func (this *RoleController) AjaxSave() {
 	}
 	//修改
 	role.Id = role_id
-	role.UpdateTime = time.Now().Unix()
+	role.UpdateTime = time.Now()
 	role.UpdateId = this.userId
 	if err := role.UpdateSysRole(); err != nil {
 		this.ajaxMsg(err.Error(), MSG_ERR)
@@ -112,7 +112,7 @@ func (this *RoleController) AjaxDel() {
 	role, _ := models.GetSysRoleById(role_id)
 	role.Status = 0
 	role.Id = role_id
-	role.UpdateTime = time.Now().Unix()
+	role.UpdateTime = time.Now()
 
 	if err := role.UpdateSysRole(); err != nil {
 		this.ajaxMsg(err.Error(), MSG_ERR)
@@ -148,8 +148,8 @@ func (this *RoleController) Table() {
 		row["id"] = v.Id
 		row["role_name"] = v.RoleName
 		row["detail"] = v.Detail
-		row["create_time"] = beego.Date(time.Unix(v.CreateTime, 0), "Y-m-d H:i:s")
-		row["update_time"] = beego.Date(time.Unix(v.UpdateTime, 0), "Y-m-d H:i:s")
+		row["create_time"] = beego.Date(v.CreateTime, "Y-m-d H:i:s")
+		row["update_time"] = beego.Date(v.UpdateTime, "Y-m-d H:i:s")
 		list[k] = row
 	}
 	this.ajaxList("成功", MSG_OK, count, list)

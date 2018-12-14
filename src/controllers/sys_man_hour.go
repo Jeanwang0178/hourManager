@@ -68,8 +68,10 @@ func (this *ManHourController) Add() {
 	//获取项目列表
 	sourceList := sourceLists(this.userId)
 	this.Data["sourceList"] = sourceList
+	this.Data["isView"] = "n"
 	this.Data["pageTitle"] = "新增项目工时"
-	this.display()
+	this.display("manhour/edit")
+
 }
 
 func (this *ManHourController) Edit() {
@@ -78,10 +80,13 @@ func (this *ManHourController) Edit() {
 	this.Data["sourceList"] = sourceList
 
 	id, _ := this.GetInt64("id")
+	isView := this.GetString("isView")
 	manHour, _ := models.GetSysManHourById(id)
 	this.Data["manHour"] = manHour
-	this.Data["workDateStr"] = beego.Date(time.Unix(manHour.WorkDate, 0), "Y-m-d")
-	this.display("manhour/add")
+	this.Data["isView"] = isView
+	this.Data["workDateStr"] = beego.Date(manHour.WorkDate, "Y-m-d")
+	this.display()
+
 }
 
 func sourceLists(userId int64) (sl []sourceList) {
@@ -102,7 +107,10 @@ func (this *ManHourController) AjaxSave() {
 	projectId, _ := this.GetInt64("project_id")
 	userId := this.userId
 	work_date := this.GetString("work_date")
-	workDate, _ := time.Parse("2006-01-02 15:04:05", work_date+" 00:00:00")
+	workDate, err := beego.DateParse(work_date, "Y-m-d")
+	if err != nil {
+		beeLogger.Log.Errorf("parse date failed :"+work_date, err)
+	}
 	taskTarget := this.GetString("task_target")
 	taskProgress := this.GetString("task_progress")
 	manHours, _ := this.GetFloat("man_hour")
@@ -111,16 +119,16 @@ func (this *ManHourController) AjaxSave() {
 		manHour := new(models.SysManHour)
 		manHour.ProjectId = projectId
 		manHour.UserId = userId
-		manHour.WorkDate = workDate.Unix()
+		manHour.WorkDate = workDate
 		manHour.TaskTarget = taskTarget
 		manHour.TaskProgress = taskProgress
 		manHour.ManHour = manHours
-		manHour.CreateTime = time.Now().Unix()
-		manHour.UpdateTime = time.Now().Unix()
+		manHour.CreateTime = time.Now()
+		manHour.UpdateTime = time.Now()
 		manHour.Status, _ = strconv.Atoi(common.Enable)
 		//新增
-		manHour.CreateTime = time.Now().Unix()
-		manHour.UpdateTime = time.Now().Unix()
+		manHour.CreateTime = time.Now()
+		manHour.UpdateTime = time.Now()
 		manHour.CreateId = this.userId
 		manHour.UpdateId = this.userId
 
@@ -139,12 +147,12 @@ func (this *ManHourController) AjaxSave() {
 	update, _ := models.GetSysManHourById(manHourId)
 	// 修改
 	update.ProjectId = projectId
-	update.WorkDate = workDate.Unix()
+	update.WorkDate = workDate
 	update.TaskTarget = taskTarget
 	update.TaskProgress = taskProgress
 	update.ManHour = manHours
 	update.UpdateId = this.userId
-	update.UpdateTime = time.Now().Unix()
+	update.UpdateTime = time.Now()
 	update.Status = 1
 
 	if err := update.UpdateSysManHour(); err != nil {
@@ -160,7 +168,7 @@ func (this *ManHourController) AjaxDel() {
 	manHour.Status = 0
 	manHour.Id = man_hour_id
 	manHour.UserId = this.userId
-	manHour.UpdateTime = time.Now().Unix()
+	manHour.UpdateTime = time.Now()
 
 	if err := manHour.UpdateSysManHour(); err != nil {
 		this.ajaxMsg(err.Error(), MSG_ERR)
@@ -214,14 +222,14 @@ func (this *ManHourController) Table() {
 		row["project_name"] = v.ProjectName
 		row["user_id"] = v.UserId
 		row["real_name"] = v.RealName
-		row["work_date"] = beego.Date(time.Unix(v.WorkDate, 0), "Y-m-d")
+		row["work_date"] = beego.Date(v.WorkDate, "Y-m-d")
 		row["task_target"] = v.TaskTarget
 		row["task_progress"] = v.TaskProgress
 		row["man_hour"] = v.ManHour
 		row["status"] = v.Status
 
-		row["create_time"] = beego.Date(time.Unix(v.CreateTime, 0), "Y-m-d H:i:s")
-		row["update_time"] = beego.Date(time.Unix(v.UpdateTime, 0), "Y-m-d H:i:s")
+		row["create_time"] = beego.Date(v.CreateTime, "Y-m-d H:i:s")
+		row["update_time"] = beego.Date(v.UpdateTime, "Y-m-d H:i:s")
 		list[k] = row
 	}
 	this.ajaxList("查询成功", MSG_OK, count, list)
@@ -272,18 +280,18 @@ func (this *ManHourController) Excel() {
 	end := ""
 	for k, v := range result {
 		row := make([]interface{}, 0)
-		row = append(row, beego.Date(time.Unix(v.WorkDate, 0), "Y-m-d"))
+		row = append(row, beego.Date(v.WorkDate, "Y-m-d"))
 		row = append(row, v.TaskTarget)
 		row = append(row, v.TaskProgress)
 		row = append(row, v.ManHour)
 
 		if k == 0 {
-			start = beego.Date(time.Unix(v.WorkDate, 0), "Y-m-d")
+			start = beego.Date(v.WorkDate, "Y-m-d")
 			others["${workTarget}"] = "本周工作目标"
 			others["${companyName}"] = v.CompanyName
 			others["${realName}"] = v.RealName
 		} else if k == len(result)-1 {
-			end = beego.Date(time.Unix(v.WorkDate, 0), "Y-m-d")
+			end = beego.Date(v.WorkDate, "Y-m-d")
 		}
 		details = append(details, &row)
 	}
