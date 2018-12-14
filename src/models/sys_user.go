@@ -67,7 +67,7 @@ func GetSysUserById(id int64) (v *SysUser, err error) {
 // no records exist
 func GetSysUserByName(loginName string) (*SysUser, error) {
 	u := new(SysUser)
-	err := orm.NewOrm().QueryTable("sys_user").Filter("login_name", loginName).One(u)
+	err := orm.NewOrm().QueryTable("sys_user").Filter("login_name", loginName).Filter("status", "1").One(u)
 	if err != nil {
 		return nil, err
 	}
