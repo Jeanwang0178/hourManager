@@ -8,7 +8,6 @@ import (
 	"hourManager/src/utils"
 	"strconv"
 	"strings"
-	"webcron/app/libs"
 )
 
 const (
@@ -64,7 +63,7 @@ func (this *BaseController) auth() {
 				user, err = models.GetSysUserById(userId)
 				utils.Che.Set("uid"+idstr, user, cache.DefaultExpiration)
 			}
-			if err == nil && password == libs.Md5([]byte(this.getClientIp()+"|"+user.Password+user.Salt)) {
+			if err == nil && password == utils.Md5([]byte(this.getClientIp()+"|"+user.Password+user.Salt)) {
 				this.userId = user.Id
 
 				this.loginName = user.LoginName
