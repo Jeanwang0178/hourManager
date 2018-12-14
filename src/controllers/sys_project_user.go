@@ -118,6 +118,7 @@ func (this *ProjectUserController) TableUser() {
 	for k, v := range result {
 		row := make(map[string]interface{})
 		row["id"] = v.Id
+		row["company_name"] = v.CompanyName
 		row["login_name"] = v.LoginName
 		row["real_name"] = v.RealName
 		row["phone"] = v.Phone
