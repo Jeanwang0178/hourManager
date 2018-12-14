@@ -9,7 +9,6 @@
 package controllers
 
 import (
-	"PPGo_ApiAdmin/libs"
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/patrickmn/go-cache"
@@ -110,7 +109,7 @@ func (self *UserController) AjaxSave() {
 			self.ajaxMsg("登录名已经存在", MSG_ERR)
 		}
 		//新增
-		pwd, salt := libs.Password(4, "")
+		pwd, salt := utils.Password(4, "")
 		user.Password = pwd
 		user.Salt = salt
 		user.CreateTime = time.Now()
@@ -138,7 +137,7 @@ func (self *UserController) AjaxSave() {
 
 	resetPwd, _ := self.GetInt("reset_pwd")
 	if resetPwd == 1 {
-		pwd, salt := libs.Password(4, "")
+		pwd, salt := utils.Password(4, "")
 		newUser.Password = pwd
 		newUser.Salt = salt
 	}
