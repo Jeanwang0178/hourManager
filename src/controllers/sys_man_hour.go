@@ -11,11 +11,18 @@ package controllers
 import (
 	"github.com/astaxie/beego"
 	"github.com/beego/bee/logger"
+	"github.com/xuri/excelize"
 	"hourManager/src/common"
 	"hourManager/src/models"
+	"hourManager/src/utils"
+	"os"
 	"strconv"
 	"strings"
 	"time"
+)
+
+const (
+	sheetName = "Sheet1"
 )
 
 type ManHourController struct {
@@ -218,4 +225,98 @@ func (this *ManHourController) Table() {
 		list[k] = row
 	}
 	this.ajaxList("查询成功", MSG_OK, count, list)
+}
+
+func (this *ManHourController) Excel() {
+	//列表
+	page, err := this.GetInt("page")
+	if err != nil {
+		page = 1
+	}
+	limit, err := this.GetInt("limit")
+	if err != nil {
+		limit = 300
+	}
+
+	projectId, _ := this.GetInt64("projectId")
+	realName := strings.TrimSpace(this.GetString("realName"))
+	isFilter := strings.TrimSpace(this.GetString("isFilter"))
+	dateRange := strings.TrimSpace(this.GetString("dateRange"))
+	this.pageSize = limit
+	//查询条件
+	filters := make(map[string]interface{})
+	beginDate := ""
+	endDate := ""
+	if dateRange != "" {
+		date := strings.Split(dateRange, " - ")
+		beginDate = date[0]
+		endDate = date[1]
+	}
+
+	beeLogger.Log.Infof("quey projectId :{}", projectId)
+	filters["projectId"] = projectId
+	filters["realName"] = realName
+	filters["beginDate"] = beginDate
+	filters["endDate"] = endDate
+	if isFilter == "" || isFilter != "n" {
+		filters["userId"] = this.userId
+	} else {
+		filters["userId"] = int64(0)
+	}
+
+	result, _ := models.GetSysManHourInfoByParam(page, this.pageSize, filters)
+	details := make([]interface{}, 0)
+	others := make(map[string]interface{})
+	beeLogger.Log.Infof("export total count ", len(result))
+	start := ""
+	end := ""
+	for k, v := range result {
+		row := make([]interface{}, 0)
+		row = append(row, beego.Date(time.Unix(v.WorkDate, 0), "Y-m-d"))
+		row = append(row, v.TaskTarget)
+		row = append(row, v.TaskProgress)
+		row = append(row, v.ManHour)
+
+		if k == 0 {
+			start = beego.Date(time.Unix(v.WorkDate, 0), "Y-m-d")
+			others["${workTarget}"] = "本周工作目标"
+			others["${companyName}"] = v.CompanyName
+			others["${realName}"] = v.RealName
+		} else if k == len(result)-1 {
+			end = beego.Date(time.Unix(v.WorkDate, 0), "Y-m-d")
+		}
+		details = append(details, &row)
+	}
+
+	if dateRange == "" {
+		dateRange = start + " - " + end
+	}
+	repstr := strings.Replace(dateRange, "-", "/", -1)
+	others["${rangDate}"] = strings.Replace(repstr, " / ", " - ", -1)
+	beeLogger.Log.Infof("replace :", others["${rangDate}"])
+
+	openFile, err := excelize.OpenFile("static/excel/template_man_hour.xlsx")
+
+	if err != nil {
+		beeLogger.Log.Errorf("open excel template failed ", err)
+	}
+
+	fileName := utils.ExportExcel(openFile, sheetName, details, others)
+
+	defer func() {
+		beeLogger.Log.Infof("delete excel %s", fileName)
+		err := os.Remove(fileName)
+		if err != nil {
+			beeLogger.Log.Errorf("delete tmp excel failed %s ", fileName)
+		}
+	}()
+
+	err = openFile.SaveAs(fileName)
+	if err != nil {
+		beeLogger.Log.Errorf("save excel failed %s ", fileName)
+	}
+	if others["${realName}"] == nil {
+		others["${realName}"] = "XXX"
+	}
+	this.Ctx.Output.Download(fileName, "能源科技周工作计划单-XXX项目-"+others["${realName}"].(string)+"-"+time.Now().Format("20060102150405")+".xlsx")
 }

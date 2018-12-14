@@ -96,7 +96,7 @@ func GetSysManHourInfoByParam(page, pageSize int, filters map[string]interface{}
 
 	totalSql.WriteString("select 'total' total, count(*) count from sys_man_hour a where exists (select 1 from sys_project b where b.id = a.project_id and (b.id = ?  or 0 = ? )  ) and (a.user_id = ? or 0 = ?)  and a.status  = 1 ")
 	totalSql.WriteString(" and  exists (select 1 from sys_user c where c.id = a.user_id and c.real_name like ?  )  ")
-	querySql.WriteString("select b.project_name,c.real_name,a.`id`, a.`project_id`, a.`user_id`, a.`work_date`, a.`task_target`, a.`task_progress`, a.`man_hour`, a.`status`, a.`create_id`, a.`update_id`, a.`create_time`, a.`update_time` from sys_man_hour a ,sys_project b ,sys_user c where a.project_id = b.id and a.user_id = c.id  and (  b.id = ? or 0 = ? ) and (a.user_id = ? or 0 = ?) and a.status = 1 and c.real_name like ? ")
+	querySql.WriteString("select b.project_name,c.real_name,a.`id`, a.`project_id`, a.`user_id`,c.`company_name`, a.`work_date`, a.`task_target`, a.`task_progress`, a.`man_hour`, a.`status`, a.`create_id`, a.`update_id`, a.`create_time`, a.`update_time` from sys_man_hour a ,sys_project b ,sys_user c where a.project_id = b.id and a.user_id = c.id  and (  b.id = ? or 0 = ? ) and (a.user_id = ? or 0 = ?) and a.status = 1 and c.real_name like ? ")
 
 	beginDate := filters["beginDate"].(string)
 	endDate := filters["endDate"].(string)
@@ -129,6 +129,7 @@ func GetSysManHourInfoByParam(page, pageSize int, filters map[string]interface{}
 			beeLogger.Log.Errorf("strconv ParseInt failed :", res["total"])
 		}
 	}
+	querySql.WriteString(" order by a.work_date,a.update_time  ")
 	querySql.WriteString("  limit ? offset ?")
 	params = append(params, pageSize)
 	params = append(params, offset)

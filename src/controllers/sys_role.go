@@ -91,11 +91,12 @@ func (this *RoleController) AjaxSave() {
 		this.ajaxMsg(err.Error(), MSG_ERR)
 	} else {
 		// 删除该角色权限
-		models.DeleteSysRoleAuth(role_id)
-		ra := new(models.SysRoleAuth)
+		models.DeleteSysRoleAuthByRoleId(role_id)
+
 		authsSlice := strings.Split(auths, ",")
 		for _, v := range authsSlice {
 			aid, _ := strconv.Atoi(v)
+			ra := new(models.SysRoleAuth)
 			ra.AuthId = int64(aid)
 			ra.RoleId = role_id
 			models.AddSysRoleAuth(ra)

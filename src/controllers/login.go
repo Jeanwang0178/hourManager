@@ -66,6 +66,7 @@ func (this *LoginController) LoginIn() {
 // @router / [get,post]
 func (this *LoginController) LoginOut() {
 	this.Ctx.SetCookie("auth", "")
+	utils.Che.Delete("menu" + strconv.FormatInt(this.user.Id, 10))
 	this.redirect(beego.URLFor("LoginController.LoginIn"))
 }
 

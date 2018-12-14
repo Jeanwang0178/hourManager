@@ -6,32 +6,30 @@
             <a class="layui-btn" data-type="tabAdd" href="/manhour/add">新增</a>
         </div>
 
-
-            <div class="layui-col-xs6 search_text">
-                <form class="layui-form" action="" onsubmit="javascript:return false;">
-                    <div class="demoTable">
-                        <div class="layui-inline">
-                           <input id="dateRange" name="work_date" type="text" lay-verify="required" value="{{$.workDateStr}}"  placeholder="日期" class="layui-input date-icon"/>
-                        </div>
-                        <div  class="layui-inline tl">
-                            <select name="projectId" lay-verify="required"  lay-search="">
-                                <option value="">全部</option>
-                            {{range $index,$elem := .sourceList}}
-                                <option value="{{$elem.ProjectId}}"  > {{$elem.ProjectName}}</option>
-                            {{end}}
-                            </select>
-                        </div>
-                        {{if ne .isFilter "y"}}
-                        <div class="layui-inline">
-                            <input class="layui-input" name="realName" id="realName" autocomplete="off" placeholder="真实姓名" value="{{.realName}}">
-                        </div>
-                        {{end}}
-                        <button class="layui-btn" data-type="reload">查询</button>
-                        <button class="layui-btn layui-btn-normal" data-type="tabExport" >导出</button>
+        <div class="layui-col-xs6 search_text">
+            <form class="layui-form" action="" id="queryForm" >
+                <div class="demoTable">
+                    <div class="layui-inline">
+                       <input id="dateRange" name="dateRange" type="text" lay-verify="required" value="{{$.workDateStr}}"  placeholder="日期" class="layui-input date-icon"/>
                     </div>
-                </form>
-            </div>
-
+                    <div  class="layui-inline tl">
+                        <select id="projectId" name="projectId" lay-verify="required"  lay-search="">
+                            <option value="">全部</option>
+                        {{range $index,$elem := .sourceList}}
+                            <option value="{{$elem.ProjectId}}"  > {{$elem.ProjectName}}</option>
+                        {{end}}
+                        </select>
+                    </div>
+                    {{if ne .isFilter "y"}}
+                    <div class="layui-inline">
+                        <input class="layui-input" name="realName" id="realName" autocomplete="off" placeholder="真实姓名" value="{{.realName}}">
+                    </div>
+                    {{end}}
+                    <a class="layui-btn" data-type="reload">查询</a>
+                    <button class="layui-btn layui-btn-normal" data-type="tabExport" >导出</button>
+                </div>
+            </form>
+        </div>
     </div>
 
 
@@ -60,6 +58,7 @@
                 isFilter : {{.isFilter}},
                 projectId:$('#projectId').val(),
                 realName: $('#realName').val(),
+                dateRange:$("#dateRange").val(),
             }
             ,cols: [[
                 {field:'id', title: 'ID', align:'center',sort: true, width:60}
@@ -82,6 +81,7 @@
             reload: function(){
                 table.reload('listReload', {
                     where: {
+                        isFilter : {{.isFilter}},
                         dateRange:$("#dateRange").val(),
                         projectId:$("#projectId").val(),
                         realName: $('#realName').val(),
@@ -89,9 +89,10 @@
                 });
             },
             tabExport:function () {
-
+                $("#queryForm").attr("action",'{{urlfor "ManHourController.Excel"}}')
             }
         };
+
 
         // 渲染laydate
         laydate.render({

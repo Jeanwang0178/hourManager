@@ -16,6 +16,7 @@ import (
 
 	"bytes"
 	"github.com/astaxie/beego/orm"
+	"github.com/beego/bee/logger"
 	"strconv"
 )
 
@@ -177,7 +178,7 @@ func UpdateSysRoleAuthById(m *SysRoleAuth) (err error) {
 
 // DeleteSysRoleAuth deletes SysRoleAuth by Id and returns error if
 // the record to be deleted doesn't exist
-func DeleteSysRoleAuth(id int64) (err error) {
+func DeleteSysRoleAuthById(id int64) (err error) {
 	o := orm.NewOrm()
 	v := SysRoleAuth{Id: id}
 	// ascertain id exists in the database
@@ -188,4 +189,19 @@ func DeleteSysRoleAuth(id int64) (err error) {
 		}
 	}
 	return
+}
+
+// DeleteSysRoleAuth deletes SysRoleAuth by roleId and returns error if
+// the record to be deleted doesn't exist
+func DeleteSysRoleAuthByRoleId(roleId int64) (err error) {
+	o := orm.NewOrm()
+	var num int64
+	v := SysRoleAuth{RoleId: roleId}
+	if num, err = o.Delete(&v, "RoleId"); err == nil {
+		beeLogger.Log.Infof("Number of records deleted in database:", num)
+	} else {
+		beeLogger.Log.Infof("Delete SysRoleAuth failed :"+strconv.FormatInt(roleId, 10), err)
+		return err
+	}
+	return nil
 }

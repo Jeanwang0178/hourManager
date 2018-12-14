@@ -75,7 +75,7 @@ func (this *BaseController) auth() {
 
 			isHasAuth := strings.Contains(this.allowUrl, this.controllerName+"/"+this.actionName)
 			//不需要权限检查
-			noAuth := "ajaxmodify/ajaxsave/ajaxdel/table/tableuser/listuser/prouserlist/list/loginin/loginout/getnodes/start/show/ajaxapisave/index/group/public/env/code/apidetail"
+			noAuth := "ajaxmodify/ajaxsave/ajaxdel/table/tableuser/listuser/prouserlist/list/loginin/loginout/getnodes/start/show/ajaxapisave/index/excel/group/public/env/code/apidetail"
 			isNoAuth := strings.Contains(noAuth, this.actionName)
 			if isHasAuth == false && isNoAuth == false {
 				//this.Ctx.WriteString("没有权限")
@@ -149,6 +149,7 @@ func (this *BaseController) AdminAuth() {
 		cheM.FirstMenu = this.Data["SideMenu1"].([]map[string]interface{})
 		cheM.SecondMenu = this.Data["SideMenu2"].([]map[string]interface{})
 		utils.Che.Set("menu"+strconv.FormatInt(this.user.Id, 10), cheM, cache.DefaultExpiration)
+
 	}
 
 }
