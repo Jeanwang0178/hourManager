@@ -3,9 +3,7 @@ package inital
 import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
-	blog "github.com/beego/bee/logger"
 	_ "github.com/go-sql-driver/mysql"
-	"hourManager/src/common"
 	"net/url"
 )
 
@@ -34,13 +32,13 @@ func Init() {
 	}
 
 	//redis 初始化
-	common.InitCache()
+	/*common.InitCache()
 
 	data := make([]interface{}, 0)
 	data = append(data, "default")
 	err = common.SetCache(common.AliasName, data, 6000000)
 	if err != nil {
 		blog.Log.Errorf("conect redis failed ", err.Error())
-	}
+	}*/
 
 }
