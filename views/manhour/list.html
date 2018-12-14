@@ -8,6 +8,7 @@
         {{end}}
         <div class="layui-col-xs6  {{if eq .isFilter "y"}} search_text {{end}}">
             <form class="layui-form" action="" id="queryForm" >
+                <input type="hidden" id="isFilter" name="isFilter" value="{{.isFilter}}">
                 <div class="demoTable">
                     <div class="layui-inline">
                        <input id="dateRange" name="dateRange" type="text" lay-verify="required" value="{{$.workDateStr}}"  placeholder="日期" class="layui-input date-icon"/>
