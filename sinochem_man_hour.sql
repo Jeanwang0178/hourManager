@@ -4,7 +4,7 @@ Navicat MySQL Data Transfer
 Source Server         : local
 Source Server Version : 50636
 Source Host           : 127.0.0.1:3306
-Source Database       : sinochem_man_hour
+Source Database       : sinochem_hour
 
 Target Server Type    : MYSQL
 Target Server Version : 50636
@@ -20,20 +20,20 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_auth`;
 CREATE TABLE `sys_auth` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
-  `pid` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '上级ID，0为顶级',
-  `auth_name` varchar(64) NOT NULL DEFAULT '0' COMMENT '权限名称',
-  `auth_url` varchar(255) NOT NULL DEFAULT '0' COMMENT 'URL地址',
-  `sort` int(1) unsigned NOT NULL DEFAULT '999' COMMENT '排序，越小越前',
-  `icon` varchar(255) NOT NULL,
-  `is_show` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否显示，0-隐藏，1-显示',
-  `user_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '操作者ID',
-  `create_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建者ID',
-  `update_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改者ID',
-  `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态，1-正常，0-删除',
-  `create_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '添加时间',
-  `update_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '修改时间',
-  PRIMARY KEY (`id`)
+                            `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+                            `pid` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '上级ID，0为顶级',
+                            `auth_name` varchar(64) NOT NULL DEFAULT '0' COMMENT '权限名称',
+                            `auth_url` varchar(255) NOT NULL DEFAULT '0' COMMENT 'URL地址',
+                            `sort` int(1) unsigned NOT NULL DEFAULT '999' COMMENT '排序，越小越前',
+                            `icon` varchar(255) NOT NULL,
+                            `is_show` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否显示，0-隐藏，1-显示',
+                            `user_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '操作者ID',
+                            `create_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建者ID',
+                            `update_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改者ID',
+                            `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态，1-正常，0-删除',
+                            `create_time` datetime  DEFAULT  NULL  COMMENT '添加时间',
+                            `update_time` datetime  DEFAULT  NULL  COMMENT '修改时间',
+                            PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb4 COMMENT='权限因子';
 
 -- ----------------------------
@@ -72,19 +72,19 @@ INSERT INTO `sys_auth` VALUES ('65', '60', '工时管理', '/manhour/listall', '
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_man_hour`;
 CREATE TABLE `sys_man_hour` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `project_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '项目ID',
-  `user_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
-  `work_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '日期',
-  `task_target` varchar(1024) NOT NULL DEFAULT '0' COMMENT '当日工作目标',
-  `task_progress` varchar(20) NOT NULL DEFAULT '0' COMMENT '任务进展情况',
-  `man_hour` decimal(15,5) DEFAULT NULL COMMENT '本日用时',
-  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '状态，1-正常 0禁用',
-  `create_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建者ID',
-  `update_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改者ID',
-  `create_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '添加时间',
-  `update_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '修改时间',
-  PRIMARY KEY (`id`)
+                                `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+                                `project_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '项目ID',
+                                `user_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
+                                `work_date` datetime  DEFAULT  NULL  COMMENT '日期',
+                                `task_target` varchar(1024) NOT NULL DEFAULT '0' COMMENT '当日工作目标',
+                                `task_progress` varchar(20) NOT NULL DEFAULT '0' COMMENT '任务进展情况',
+                                `man_hour` decimal(15,5) DEFAULT NULL COMMENT '本日用时',
+                                `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '状态，1-正常 0禁用',
+                                `create_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建者ID',
+                                `update_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改者ID',
+                                `create_time` datetime  DEFAULT  NULL  COMMENT '添加时间',
+                                `update_time` datetime  DEFAULT  NULL  COMMENT '修改时间',
+                                PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COMMENT='工时统计表';
 
 -- ----------------------------
@@ -107,15 +107,15 @@ INSERT INTO `sys_man_hour` VALUES ('13', '3', '3', '2018-12-26 00:00:00', '33', 
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_project`;
 CREATE TABLE `sys_project` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `project_name` varchar(32) NOT NULL DEFAULT '0' COMMENT '项目名称',
-  `detail` varchar(255) NOT NULL DEFAULT '0' COMMENT '备注',
-  `create_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建者ID',
-  `update_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改这ID',
-  `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态1-正常，0-删除',
-  `create_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '添加时间',
-  `update_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '修改时间',
-  PRIMARY KEY (`id`)
+                               `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+                               `project_name` varchar(32) NOT NULL DEFAULT '0' COMMENT '项目名称',
+                               `detail` varchar(255) NOT NULL DEFAULT '0' COMMENT '备注',
+                               `create_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建者ID',
+                               `update_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改这ID',
+                               `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态1-正常，0-删除',
+                               `create_time` datetime  DEFAULT  NULL  COMMENT '添加时间',
+                               `update_time` datetime  DEFAULT  NULL  COMMENT '修改时间',
+                               PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='项目表';
 
 -- ----------------------------
@@ -129,15 +129,15 @@ INSERT INTO `sys_project` VALUES ('4', '壹化网', '测试壹化网项目', '1'
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_project_user`;
 CREATE TABLE `sys_project_user` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `project_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '项目ID',
-  `user_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
-  `create_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建者ID',
-  `update_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改者ID',
-  `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态1-正常，0-删除',
-  `create_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '添加时间',
-  `update_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '修改时间',
-  PRIMARY KEY (`id`)
+                                    `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+                                    `project_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '项目ID',
+                                    `user_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
+                                    `create_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建者ID',
+                                    `update_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改者ID',
+                                    `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态1-正常，0-删除',
+                                    `create_time` datetime  DEFAULT  NULL  COMMENT '添加时间',
+                                    `update_time` datetime  DEFAULT  NULL  COMMENT '修改时间',
+                                    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8 COMMENT='项目用户表';
 
 -- ----------------------------
@@ -154,15 +154,15 @@ INSERT INTO `sys_project_user` VALUES ('35', '4', '1', '1', '1', '1', '2018-12-1
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_role`;
 CREATE TABLE `sys_role` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `role_name` varchar(32) NOT NULL DEFAULT '0' COMMENT '角色名称',
-  `detail` varchar(255) NOT NULL DEFAULT '0' COMMENT '备注',
-  `create_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建者ID',
-  `update_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改这ID',
-  `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态1-正常，0-删除',
-  `create_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '添加时间',
-  `update_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '修改时间',
-  PRIMARY KEY (`id`)
+                            `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+                            `role_name` varchar(32) NOT NULL DEFAULT '0' COMMENT '角色名称',
+                            `detail` varchar(255) NOT NULL DEFAULT '0' COMMENT '备注',
+                            `create_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建者ID',
+                            `update_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改这ID',
+                            `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态1-正常，0-删除',
+                            `create_time` datetime  DEFAULT  NULL  COMMENT '添加时间',
+                            `update_time` datetime  DEFAULT  NULL  COMMENT '修改时间',
+                            PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='角色表';
 
 -- ----------------------------
@@ -176,11 +176,11 @@ INSERT INTO `sys_role` VALUES ('2', '普通管理员', '普通管理员', '0', '
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_role_auth`;
 CREATE TABLE `sys_role_auth` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `role_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '角色ID',
-  `auth_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '权限ID',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `role_id` (`role_id`,`auth_id`)
+                                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+                                 `role_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '角色ID',
+                                 `auth_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '权限ID',
+                                 PRIMARY KEY (`id`),
+                                 UNIQUE KEY `role_id` (`role_id`,`auth_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=118 DEFAULT CHARSET=utf8mb4 COMMENT='权限和角色关系表';
 
 -- ----------------------------
@@ -225,24 +225,24 @@ INSERT INTO `sys_role_auth` VALUES ('105', '2', '65');
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `login_name` varchar(20) NOT NULL DEFAULT '' COMMENT '用户名',
-  `real_name` varchar(32) NOT NULL DEFAULT '0' COMMENT '真实姓名',
-  `password` char(32) NOT NULL DEFAULT '' COMMENT '密码',
-  `role_ids` varchar(255) NOT NULL DEFAULT '0' COMMENT '角色id字符串，如：2,3,4',
-  `phone` varchar(20) NOT NULL DEFAULT '0' COMMENT '手机号码',
-  `email` varchar(50) NOT NULL DEFAULT '' COMMENT '邮箱',
-  `salt` char(10) NOT NULL DEFAULT '' COMMENT '密码盐',
-  `last_login` int(11) NOT NULL DEFAULT '0' COMMENT '最后登录时间',
-  `last_ip` char(15) NOT NULL DEFAULT '' COMMENT '最后登录IP',
-  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '状态，1-正常 0禁用',
-  `create_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建者ID',
-  `update_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改者ID',
-  `create_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '添加时间',
-  `update_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '修改时间',
-  `company_name` varchar(64) NOT NULL DEFAULT '' COMMENT '公司',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_user_name` (`login_name`)
+                            `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+                            `login_name` varchar(20) NOT NULL DEFAULT '' COMMENT '用户名',
+                            `real_name` varchar(32) NOT NULL DEFAULT '0' COMMENT '真实姓名',
+                            `password` char(32) NOT NULL DEFAULT '' COMMENT '密码',
+                            `role_ids` varchar(255) NOT NULL DEFAULT '0' COMMENT '角色id字符串，如：2,3,4',
+                            `phone` varchar(20) NOT NULL DEFAULT '0' COMMENT '手机号码',
+                            `email` varchar(50) NOT NULL DEFAULT '' COMMENT '邮箱',
+                            `salt` char(10) NOT NULL DEFAULT '' COMMENT '密码盐',
+                            `last_login` int(11) NOT NULL DEFAULT '0' COMMENT '最后登录时间',
+                            `last_ip` char(15) NOT NULL DEFAULT '' COMMENT '最后登录IP',
+                            `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '状态，1-正常 0禁用',
+                            `create_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建者ID',
+                            `update_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改者ID',
+                            `create_time` datetime  DEFAULT  NULL  COMMENT '添加时间',
+                            `update_time` datetime  DEFAULT  NULL  COMMENT '修改时间',
+                            `company_name` varchar(64) NOT NULL DEFAULT '' COMMENT '公司',
+                            PRIMARY KEY (`id`),
+                            UNIQUE KEY `idx_user_name` (`login_name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
 
 -- ----------------------------

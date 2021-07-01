@@ -9,8 +9,8 @@
 package utils
 
 import (
+	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/beego/bee/logger"
-	"github.com/xuri/excelize"
 	"strconv"
 	"strings"
 	"time"
@@ -20,10 +20,11 @@ import (
  * 导出EXCEL
  * openFile 模板文件
  * details 详细列表 格式：${detail}
+ * cellSize 每行填充字段个数 复制样式用
  * others 其他内容替换（单个） 格式：${XXX}
  * return fileName
  */
-func ExportExcel(openFile *excelize.File, sheetName string, details []interface{}, others map[string]interface{}) (fileName string) {
+func ExportExcel(openFile *excelize.File, sheetName string, details []interface{},cellSize int, others map[string]interface{}) (fileName string) {
 
 	rows := openFile.GetRows(sheetName)
 
@@ -41,7 +42,16 @@ func ExportExcel(openFile *excelize.File, sheetName string, details []interface{
 			if colCell == "${detail}" {
 				rowIndex := i + 1
 				height := openFile.GetRowHeight(sheetName, rowIndex)
-				for _, slice := range details {
+
+				for k, slice := range details {
+
+					for n := 0; n < cellSize; n++ {
+						axis2 := intToAscii(int32(n+1+65)) + strconv.Itoa(i+1)
+						sw := openFile.GetCellStyle(sheetName,axis2)
+						hcell := intToAscii(int32(n+1+65)) + strconv.Itoa(k+i+1)
+						openFile.SetCellStyle(sheetName,hcell, hcell,sw)
+					}
+
 					openFile.SetSheetRow(sheetName, "B"+strconv.Itoa(rowIndex), slice)
 					openFile.SetRowHeight(sheetName, rowIndex, height)
 

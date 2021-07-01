@@ -9,9 +9,9 @@
 package controllers
 
 import (
+	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/astaxie/beego"
 	"github.com/beego/bee/logger"
-	"github.com/xuri/excelize"
 	"hourManager/src/common"
 	"hourManager/src/models"
 	"hourManager/src/utils"
@@ -278,12 +278,14 @@ func (this *ManHourController) Excel() {
 	beeLogger.Log.Infof("export total count ", len(result))
 	start := ""
 	end := ""
+	cellSize := 0
 	for k, v := range result {
 		row := make([]interface{}, 0)
 		row = append(row, beego.Date(v.WorkDate, "Y-m-d"))
 		row = append(row, v.TaskTarget)
 		row = append(row, v.TaskProgress)
 		row = append(row, v.ManHour)
+		cellSize = 4
 
 		if k == 0 {
 			start = beego.Date(v.WorkDate, "Y-m-d")
@@ -309,7 +311,7 @@ func (this *ManHourController) Excel() {
 		beeLogger.Log.Errorf("open excel template failed ", err)
 	}
 
-	fileName := utils.ExportExcel(openFile, sheetName, details, others)
+	fileName := utils.ExportExcel(openFile, sheetName, details,cellSize, others)
 
 	defer func() {
 		beeLogger.Log.Infof("delete excel %s", fileName)

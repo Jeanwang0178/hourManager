@@ -53,9 +53,10 @@ func main() {
 		currentpath = workspace
 	}
 	if beeUtils.IsInGOPATH(currentpath) {
-		swaggergen.ParsePackagesFromDir(currentpath)
+		swaggergen.GenerateDocs(currentpath)
+	}else{
+		swaggergen.GenerateDocs("")
 	}
-	swaggergen.GenerateDocs("")
 
 	beego.InsertFilter("*", beego.BeforeRouter, cors.Allow(&cors.Options{
 		AllowOrigins:     []string{"*"},
